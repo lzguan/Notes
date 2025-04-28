@@ -1,0 +1,2374 @@
+\documentclass[11pt]{amsart}
+
+\setlength{\textwidth}{6in} 
+\setlength{\textheight}{8.7in}
+\setlength{\oddsidemargin}{.3in}
+\setlength{\evensidemargin}{0.3in}
+\setlength{\topmargin}{-.25in}
+
+\usepackage{amssymb, amsfonts, amsmath, amsthm}
+\usepackage{xcolor} 
+ 
+\pagestyle{headings}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.markings}
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{prop-and-def}[theorem]{Proposition and Definition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{definition-and-remark}[theorem]{Definition and Remark}
+\newtheorem{remark-and-notation}[theorem]{Remark and Notation}
+\newtheorem{notation-and-remark}[theorem]{Notation and Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{solution}[theorem]{Solution}
+
+\setcounter{section}{-1}
+
+\numberwithin{equation}{section}
+
+
+\begin{document}
+\tableofcontents
+\newpage
+
+\section{List of distributions}
+\begin{enumerate}
+    \item Normal distribution (continuous)
+    
+    $X\sim N(\mu,\sigma^2)$
+    \begin{align*}
+        f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right),\qquad x\in\mathbb R
+    \end{align*}
+    \item Poisson distribution (discrete)
+    
+    $X\sim \mathrm{POI}(\mu)$, $\mu>0$
+    \begin{align*}
+        f(x)=\frac{e^{-\mu}\mu^x}{x!},\qquad x=0,1,2,\ldots
+    \end{align*}
+    \item Bernoulli distribution (discrete)
+
+    $X\sim\mathrm{Bern}(p)$, $0\le p\le 1$
+    \begin{align*}
+        f(x)=p^x(1-p)^{1-x},\qquad x=0,1
+    \end{align*}
+    \item Binomial distribution (discrete)
+
+    $X\sim\mathrm{Bin}(n,p)$, $n\in\mathbb N$, $0\le p\le 1$
+    \begin{align*}
+        f(x)=\binom{n}{x}p^x(1-p)^{n-x},\qquad x=0,1,\ldots,n
+    \end{align*}
+    \item Multinomial distribution (discrete)
+    
+    $X=(X_1,\ldots,X_k)\sim\mathrm{Mult}(n,p_1,p_2,\ldots,p_k)$, $\sum_{i=1}^kp_k=1$
+    \begin{align*}
+        f(x_1,\ldots,x_k)=\frac{n!}{x_1!x_2!\ldots x_k!}p_1^{x_1}p_2^{x_2}\ldots p_k^{x_k},\qquad x_i\in\{0,1,\ldots,n\}\text{ for each }i,\,\sum_{i=1}^kx_i=n
+    \end{align*}
+    \item Uniform distribution (continuous)
+    
+    $X\sim U(a,b)$, $a<b\in\mathbb R$
+    \begin{align*}
+        f(x)=\frac{1}{b-a},\qquad a<x<b
+    \end{align*}
+    \item Gamma distribution (continuous)
+    $X\sim\mathrm{Gamma}(\alpha,\beta)$, $\alpha,\beta>0$
+    \begin{align*}
+        f(x)=\frac{1}{\beta^\alpha\Gamma(\alpha)}x^{\alpha-1}\exp(-\frac{x}{\beta}),\qquad x>0
+    \end{align*}
+    \item Exponential distribution (continuous)
+
+    $X\sim\mathrm{Exp}(\theta)$, $\theta>0$
+    \begin{align*}
+        f(x)=\frac{1}{\theta}\exp(-\frac{x}{\theta}), \qquad x\ge0
+    \end{align*}
+    \item Chi-squared distribution (continuous)
+
+    $X\sim\chi^2_k$, $k=1,2,\ldots$
+    \begin{align*}
+        f(x)=\frac{1}{2^{k/2}\Gamma(k/2)}x^{k/2-1}e^{-x/2},\qquad x>0
+    \end{align*}
+    
+\end{enumerate}
+\newpage
+\section{Review}
+\begin{definition}
+    For a random variable $X:\Omega\to\mathbb R$, its Cumulative Distribution Function (CDF) is the function
+    \begin{align*}
+        F_X:&\mathbb R\to[0,1]\\
+        &x\mapsto P[X\le x]
+    \end{align*}
+\end{definition}
+\begin{proposition} For a real valued random variable $X$ on a space $\Omega$, the following hold:
+    \begin{enumerate}
+        \item [(i)] $F_X$ is nondecreasing
+        \item [(ii)] $\lim_{x\to-\infty}F_X(x)=0$, $\lim_{x\to\infty}F_X(x)=1$
+        \item [(iii)] $\lim_{x\searrow x_0}F_X(x)=F_X(x_0)$ for each $x_0\in\mathbb R$
+        \item [(iv)] $P[a<X\le b]=F_X(b)-F_X(a)$ for each $a\le b\in\mathbb R$.
+        \item [(v)] $P[X=b]=F_X(b)-P[X<b]=F_X(b)-\lim_{x\nearrow b}F_X(x)$
+    \end{enumerate}
+\end{proposition}
+\begin{proof} Straightforward.
+    \begin{enumerate}
+        \item [(i)] No shit
+        \item [(ii)] Note that $\lim_{x\to\infty}F_X(x)=\lim_{N\to\infty}F_X(N)$ since $F_X$ is nondecreasing. But we know that $F_X(N)=P[X\le N]$ and the events $\{X\le N\}$ form an increasing sequence of events, so we have that 
+        \begin{align*}
+            1&=P[X\in\mathbb R]\\
+            &=P[\bigcup_{N\in\mathbb N} \{X\le N\}]\\
+            &=\lim_{N\to\infty}P[X\le N]
+        \end{align*}
+        as desired.
+
+        The proof is similar for the case that $x\to-\infty$.
+        \item [(iii)] The proof is similar to (iii).
+        \item [(iv)] Duh
+        \item [(v)] Follows by (iv). Note that the event $\{X<b\}$ is the event $\bigcup_{N\ge 1}\{X\le b-\frac{1}{N}\}$.
+    \end{enumerate}
+\end{proof}
+\begin{definition}
+    A discrete random variable $X:\Omega\to\mathbb R$ is a random variable that takes countably many values a.s.
+
+    More precisely, there exists a countable set $A$ such that $P[X\in A]=1$. We call $A$ the set of support for $X$. We may assume without loss of generality that for each $a\in A$, $P[X=a]>0$.
+\end{definition}
+From here on out, whenever the random variable we are working with is clear, we will denote the cdf by $F$ instead of $F_X$.
+\begin{definition}
+    For a discrete random variable $X$, we define its probability mass function as
+    \begin{align*}
+        p_X(x)=P[X=x]
+    \end{align*}
+    Note this is positive only on the set of support of $X$ and we have that
+    \begin{align*}
+        \sum_{x\in A}p_X(x)=1
+    \end{align*}
+    where $A$ is the set of support.
+\end{definition}
+Below are some commonly distributed random variables.
+\begin{definition}
+    A Bernoulli random variable with parameter $\theta$ is a discrete random variable $X$ such that 
+    \begin{align*}
+        p_X(x)=\begin{cases}
+            \theta, & x=1\\
+            1-\theta, & x=0\\
+            0, & \text{otherwise}
+        \end{cases}
+    \end{align*}
+    We say that $X\sim\mathrm{Bern}(\theta)$.
+\end{definition}
+\begin{definition}
+    A Binomial random variable with parameters $n,\theta$ is a discrete random variable $X$ such that 
+    \begin{align*}
+        p_X(x)=\frac{n!}{x!(n-x)!}\theta^x(1-\theta)^{n-x}
+    \end{align*}
+    for $x=0,1,\ldots,n$. We say $X\sim\mathrm{Bin}(n,\theta)$.
+\end{definition}
+\begin{remark}
+    A binomial random variable is distributed identically to a sum of $n$ i.i.d. Bernoulli random variables with the same $\theta$ parameter.
+\end{remark}
+\begin{definition}
+    A multinomial random variable with parameters $n,p_1,p_2,\ldots,p_k$ such that $p_1+p_2+\ldots+p_k$ is a joint random variable $(X_1,X_2,\ldots,X_k)$ of discrete random variables such that 
+    \begin{align*}
+        P[X_1=x_1,X_2=x_2,\ldots,X_k=x_k]=\frac{n!}{x_1!x_2!\ldots x_k!}p_1^{x_1}p_2^{x_2}\ldots p_k^{x_k}
+    \end{align*}
+    where $\sum_ix_i=n$.
+\end{definition}
+\begin{definition}
+    A Poisson random variable is a discrete random variable $X$ with probability mass function
+    \begin{align*}
+        p_X(x)=\frac{e^{-\mu}\mu^x}{x!}
+    \end{align*}
+    for $x=0,1,\ldots$.
+\end{definition}
+It is a straightforward exercise to verify that the sum of each of these distributions over their respective sets of supports is 1.
+\begin{definition}
+    A continuous random variable $X$ is a random variable such that its cdf $F(x)$ is continuous everywhere and nondifferentiable at only countably many points. We define the probability distribution function of $X$, $f(x)$, by
+    \begin{align*}
+        f(x)=F'(x)
+    \end{align*}
+    everywhere except where $F$ is nondifferentiable.
+\end{definition}
+\begin{proposition}
+    For a continuous random variable $X$, we have that
+    \begin{align*}
+        P[a<X\le b]&=P[X\le b]-P[X\le a]\\
+        &=\int_{a}^bf(x)dx.
+    \end{align*}
+    It follows that for any $b$, $P[X=b]=0$.
+
+    It also follows that $\int_\mathbb R f(x)dx=1$.
+\end{proposition}
+\begin{definition}
+    We say that a continuous random variable $X$ is uniformly distributed across the interval $(a,b)$ if its pdf is
+\begin{align*}         f(x)=\frac{1}{b-a} \end{align*} in $(a,b)$ and $0$ everywhere else. We say $X\sim\mathrm{Unif}(a,b)$.
+\end{definition}
+\begin{definition}
+    We say that a continuous random variable $X$ is normally distributed with parameters $\mu,\sigma^2$ if \begin{align*}
+        f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+    \end{align*}
+    for all $x\in\mathbb R$.
+\end{definition}
+\begin{definition}
+    The Gamma function, $\Gamma$, is defined by 
+    \begin{align*}
+        \Gamma(\alpha)=\int_0^\infty y^{\alpha-1}\exp(-y)dy.
+    \end{align*}
+\end{definition}
+\begin{proposition}
+    The following hold:
+    \begin{enumerate}
+        \item [(i)] $\Gamma(x)=(x-1)\Gamma(x-1)$
+        \item [(ii)] $\Gamma(1)=1$
+        \item [(iii)] $\Gamma(\frac{1}{2})=\sqrt\pi$
+    \end{enumerate}
+\end{proposition}
+\begin{definition}
+    We say that a continuous random variable $X$ has Gamma distribution with parameters $\alpha,\beta$ for $\alpha,\beta>0$ if its pdf is given by
+\begin{align*}         f(x)=\frac{1}{\beta^\alpha\Gamma(\alpha)} x^{\alpha-1}\exp(-\frac{x}{\beta})
+    \end{align*}
+    for $x>0$.
+\end{definition}
+\begin{remark}
+    An exponentially distributed random variable with parameter $\theta$ is a random variable with pdf
+    \begin{align*}
+        f(x)=\frac{1}{\theta}\exp\left(-\frac{x}{\theta}\right).
+    \end{align*}
+    We can note that $X$ is also distributed according to a $\mathrm{Gamma}(1,\theta)$ distribution.
+\end{remark}
+It is left as an exercise to show that each of the distributions above integrate/sum to 1.
+\begin{example}
+    Let $X_1,X_2,\ldots, X_n$ be i.i.d. exponentially distributed rvs with parameter $\theta$. Find the distribution of their minimum, $Y=\min\{X_1,\ldots,X_n\}$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    We will compute the tail probability of $Y$.
+
+    Note that
+    \begin{align*}
+        P[Y> t]&=P[X_1> t,X_2> t,\ldots,X_n> t]\\
+        &=P[X_1> t]^n\\
+        &=\exp\left(-\frac{n}{\theta} t\right)
+    \end{align*}
+    which gives that $Y\sim\mathrm{Exponential(\frac{\theta}{n})}$.
+\end{solution}
+\begin{example}
+    Recall that for $X\sim\mathcal N(\mu,\sigma^2)$, we have that
+    \begin{align*}
+        E[X]=\mu
+    \end{align*}
+    and
+    \begin{align*}
+        \mathrm{Var}(X)=\sigma^2.
+    \end{align*}
+    For a given normal random variable $X$ with mean $\mu$ and variance $\sigma^2$, we would like to transform $X$ affinely to obtain a normalized random variable.
+
+    Note that $X-\mu$ has mean 0 and thus $\frac{X-\mu}{\sigma}$ has variance $\frac{\sigma^2}{\sigma^2}=1$. This allows to use the normal table commonly found in statistics textbooks.
+\end{example}
+\begin{definition}
+    Let $X$ be a random variable. The moment generating function (mgf) of $X$ is defined as
+    \begin{align*}
+        M_X(t)=E[e^{tX}]
+    \end{align*}
+    wherever it is finite.
+\end{definition}
+\begin{proposition}
+    For nice moment generating functions, the $n$th derivative of $M_X$ at 0 is precisely the $n$th moment of $X$.
+\end{proposition}
+\begin{proof}
+    \begin{align*}
+        E[e^{tX}]&=\int_\Omega\exp(tX)\\
+        &=\int_\Omega\sum_{n=0}^\infty\frac{(tX)^n}{n!}\\
+        &=\sum_{n=0}^\infty\frac{t^n}{n!}\int_\Omega X^n\\
+        &=\sum_{n=0}^\infty\frac{t^n}{n!}E[X^n]
+    \end{align*}
+    Where each equality holds and converges under suitable conditions and thus we have a Taylor series. A computation gives the desired result.
+\end{proof}
+\begin{example}
+    For a normal random variable $X\sim\mathcal N(\mu,\sigma^2)$, we have that
+    \begin{align*}
+        M_X(t)&=E[e^{tX}]\\
+        &=\int_\mathbb R e^{tx}\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}dx\\
+        &=\frac{1}{\sqrt{2\pi\sigma^2}}\int_\mathbb Re^{\frac{2t\sigma^2x-(x-\mu)^2}{2\sigma^2}}dx
+    \end{align*}
+    We may now complete the square.
+    \begin{align*}
+        &\frac{1}{\sqrt{2\pi\sigma^2}}\int_\mathbb R\exp\left({\frac{2t\sigma^2x-(x-\mu)^2}{2\sigma^2}}\right)dx\\
+        &=\frac{1}{\sqrt{2\pi\sigma^2}}\int_\mathbb R\exp\left({\frac{2t\sigma^2x-(x-\mu)^2}{2\sigma^2}}\right)dx\\
+        &=\frac{1}{\sqrt{2\pi\sigma^2}}\int_\mathbb R\exp\left((x-(\mu+\sigma^2t))^2-(\mu+\sigma t)^2+\mu^2\right)dx\\
+        &=\frac{1}{\sqrt{2\pi\sigma^2}}\int_\mathbb R\exp\left(\frac{1}{2\sigma^2}\left((x-(\mu+\sigma^2t))^2-(\mu+\sigma t)^2+\mu^2\right)\right)dx
+    \end{align*}
+    We get a pdf of normal times something inside and a computation yields
+    \begin{align*}
+        M_X(t)=e^{t\mu+\frac{t^2\sigma^2}{2}}
+    \end{align*}
+\end{example}
+\begin{definition}
+    Let $X,Y$ be random variables (in the same space). The joint cdf of $X$ and $Y$ is given by
+    \begin{align*}
+        F_{X,Y}(x,y)=P[X\le x,Y\le y]
+    \end{align*}
+\end{definition}
+\begin{proposition}
+    The following are true.
+    \begin{enumerate}
+        \item [(i)] $F$ is non-decreasing in $x$ for fixed $y$ (and the other way around)
+        \item [(ii)] For a fixed $y$, 
+        \begin{align*}
+            \lim_{x\to-\infty}F_{X,Y}(x,y)=0
+        \end{align*}
+        \item [(iii)] For a fixed $y$,
+        \begin{align*}
+            \lim_{x\to\infty} F(x,y)=P[Y\le y]
+        \end{align*}
+        It thus follows that $\lim_{(x,y)\to(\infty,\infty)}F(x,y)=1$.
+    \end{enumerate}
+\end{proposition}
+\begin{definition}
+    For random variables $X,Y$, we define their marginal cdf as
+    \begin{align*}
+        F_1(x)=P[X\le x]\\
+        F_2(y)=P[Y\le y]
+    \end{align*}
+\end{definition}
+\begin{definition}
+    For discrete random variables $x,y$, we define their joint probability function to be
+    \begin{align*}
+        f(x,y)=P[X=x,Y=y]
+    \end{align*}
+    We call the set $A=\{(x,y)\in\mathbb R^2:f(x,y)\ne0\}$ to be the set of support of the joint rv $(X,Y)$.
+\end{definition}
+\begin{proposition}
+    It holds that
+    \begin{align*}
+        \sum_Af(x,y)=1.
+    \end{align*}
+\end{proposition}
+\begin{definition}
+    We define the marginal pmf of $X$ to be
+    \begin{align*}
+        f_1(x)=\sum_yf(x,y)
+    \end{align*}
+    We define the marginal pmf of $Y$ similarly.
+\end{definition}
+\begin{definition}
+    We define the conditional pmf of $X|Y$ to be 
+    \begin{align*}
+        f_1(x|y)=\frac{f(x,y)}{f_2(y)}
+    \end{align*}
+    whenever $f_2(y)\ne0$.
+\end{definition}
+\begin{proposition}
+    The following holds:
+    \begin{align*}
+        \sum_xf_1(x|y)=1
+    \end{align*}
+\end{proposition}
+\begin{definition}
+    If $X,Y$ are continuous random variables, their joint pdf is given by
+    \begin{align*}
+        f(x,y)=\frac{\partial^2F}{\partial x\partial y}
+    \end{align*}
+    Note that the order of the partials does not matter when $F$ is sufficiently nice ($C^2$)
+
+    The set on which the joint pdf is positive is called the set of support of $(X,Y)$.
+\end{definition}
+\begin{proposition}
+    It holds that
+    \begin{align*}
+        \int_Af=1
+    \end{align*}
+\end{proposition}
+\begin{definition}
+    The marginal pdf of $X$ is given by
+    \begin{align*}
+        f_1(x)=\int_\mathbb Rf(x,y)dy
+    \end{align*}
+    The conditional probability function of $X|Y$ is given by
+    \begin{align*}
+        f_1(x|y)=\frac{f(x,y)}{f_2(y)}
+    \end{align*}
+\end{definition}
+\begin{proposition}
+    It holds that 
+    \begin{align*}
+        \int_\mathbb Rf(x|y)dx=1
+    \end{align*}
+\end{proposition}
+We can remark that the conditional pf/pdf is a pf/pdf on its own.
+\begin{example}[Hardy-Weinberg Law]
+    In a certain population, we may choose samples with genotypes $AA$, $Aa$, and $aa$ with relative frequencies $\theta^2$, $2\theta(1-\theta)$, and $(1-\theta)^2$. Say we select $n$ members of the population at random. Let $X$ be the number of $AA$ types selected and $Y$ be the number of $Aa$ types selected.
+
+    \begin{enumerate}
+        \item [(i)] Find the joint pf of $(X,Y)$.
+
+        Remark that setting $Z=n-X-Y$ gives that $(X,Y,Z)\sim\mathrm{Multinomial}(\theta^2,2\theta(1-\theta),(1-\theta)^2)$, where we can see that $P[X=x,Y=y]=\sum_zP[X=x,Y=y,Z=z]$, which is an easy computation.
+        \item [(ii)] Find the marginal pf of $X$.
+
+        This is $\mathrm{Bin}(n,\theta^2)$.
+        \item [(iii)] Find the conditional pf given $Y=1$.
+
+        Intuitively, this is $\mathrm{Bin}(n-1,\frac{\theta^2}{\theta^2+(1-\theta)^2})$. A computation will verify this.
+    \end{enumerate}
+\end{example}
+\begin{example}
+    Suppose $X,Y$ are two conditional random variables with joint pdf $f(x,y)=ke^{-x-y}$ for $0<x<y<1$ and 0 otherwise.
+    \begin{enumerate}
+        \item [(i)] Find $k$.
+
+        We see that $k\int_{0}^1\int_x^1e^{-x-y}dydx=1$. Compute:
+        \begin{align*}
+            \int_0^1\int_x^1e^{-x-y}dydx&=\int_0^1e^{-x}\int_x^1e^{-y}dydx\\
+            &=\int_0^1e^{-x}(-e^{-1}+e^{-x})dx\\
+            &=\frac{(e-1)^2}{2e^2}
+        \end{align*}
+
+        Thus $k$ is the reciprocal of this value.
+        \item [(ii)] Find the marginal pdf of $X$.
+
+        We see that $f_1(x)=\int_0^1f(x,y)dy$. A computation yields
+        \begin{align*}
+            \int_0^1f(x,y)dy&=k\int_x^1e^{-x-y}dy\\
+            &=ke^{-x}\int_x^1e^{-y}dy\\
+            &=ke^{-x}(e^{-x}-e^{-1})\\
+        \end{align*}
+        \item [(iii)] Find the conditional pdf of $Y$ given $X=x$.
+
+        This is $\frac{f(x,y)}{f_1(x)}$, which is an easy computation.
+        \item [(iv)] Find the joint cdf and use it to find the marginal cdf.
+
+        Ez integral.
+    \end{enumerate}
+\end{example}
+\begin{proposition}
+    We have that $f(x,y)=f_1(x|y)f_2(y)=f_2(y|x)f_1(x)$ whenever these are well-defined.
+\end{proposition}
+\begin{definition}
+    We say two random variables are independent if 
+    \begin{align*}
+        P[X\in A,Y\in B]=P[X\in A]P[Y\in B]
+    \end{align*}
+    for any two Borel sets $A,B\subset\mathbb R$.
+\end{definition}
+\begin{proposition}
+    Two random variables are independent if and only if
+    \begin{align*}
+        F(x,y)&=F_1(x)F_2(y)\\
+        f(x,y)&=f_1(x)f_2(y)\\
+        f_1(x|y)&=f_1(x)\\
+        f_2(y|x)&=f_2(x)\\
+        M_{(X,Y)}(t_1,t_2)&=M_X(t_1)M_Y(t_2)
+    \end{align*}
+\end{proposition}
+\begin{example}
+    Let $X,Y$ be random variables with joint distribution $f(x,y)=\frac{\theta^{x+y}e^{-2\theta}}{x!y!}$. Are $X$ and $Y$ independent?
+
+    It is easy to see that $f(x,y)$ is equal to the product of two independent Poisson pfs. It thus makes sense intuitively that $X$ and $Y$ are independent.
+
+    A computation will verify this.
+\end{example}
+\begin{definition}
+    Let $X_1,X_2,\ldots,X_n$ be iid. We define the $k$th largest random variable in the sequence as $X_{(k)}$. For example,
+    \begin{align*}
+        X_{(1)}&=\min\{X_1,\ldots,X_n\}\\
+        X_{(n)}&=\max\{X_1,\ldots,X_n\}
+    \end{align*}
+\end{definition}
+\begin{proposition}
+    \begin{align*}
+        P[X_{(1)}\ge t]=\prod_{k=1}^nP[X_k\ge t]\\
+        P[X_{(n)}\le t]=\prod_{k=1}^nP[X_k\le t]
+    \end{align*}
+    The partial order is (probably) required. Actually maybe not.
+\end{proposition}
+\begin{proof}
+    \begin{align*}
+        P[X_{(1)}\ge t]&=P[X_1\ge t,X_2\ge t,\ldots,X_n\ge t]
+    \end{align*}
+    and we can use independence.
+\end{proof}
+\begin{proposition}
+    Let $X_1,\ldots,X_n$ be continuous iid with pdf $f(x)$. The pdfs of $X_{(1)}$ and $X_{(n)}$ are given by
+    \begin{align*}
+        f_{(1)}(t)=nf(t)(1-F(t))^{n-1}\\
+        f_{(n)}(t)=nf(t)(F(t))^{n-1}
+    \end{align*}
+\end{proposition}
+\begin{example}
+    Suppose $X_1,\ldots,X_n$ are $\mathrm{Unif(0,\theta)}$. Find the distribution of $X_{(1)}$ and $X_{(n)}$.
+
+    See STAT 333 notes.
+
+    Alternatively, we just plug everything in and we get 
+    \begin{align*}
+        f_{(1)}(t)=n\frac{1}{\theta}(1-\frac{t}{\theta})^{n-1}\\
+        f_{(n)}(t)=n\frac{t^{n-1}}{\theta^{n}}
+    \end{align*}
+\end{example}
+\begin{example}
+    Let $X\sim\mathrm{Gamma}(\alpha_1,\beta)$ and $Y\sim\mathrm{Gamma}(\alpha_2,\beta)$. Find the distribution of $X+Y$.
+
+    Use convolution:
+    \begin{align*}
+        f_{X+Y}(t)&=\int_{x+y=t}f(x,y)\\
+        &=\int_{0}^tf(x,t-x)dx\\
+        &=\int_0^tf(x)f(t-x)dx\\
+        &=\int_0^t\frac{1}{\beta^{\alpha_1+\alpha_2}\Gamma(\alpha_1)\Gamma(\alpha_2)}x^{\alpha_1-1}(t-x)^{\alpha_2-1}\exp(\frac{-x-(t-x)}{\beta})dx\\
+        &=\frac{1}{\beta^{\alpha_1+\alpha_2}\Gamma(\alpha_1)\Gamma(\alpha_2)}\int_0^tx^{\alpha_1-1}(t-x)^{\alpha_2-1}\exp(\frac{-t}{\beta})dx\\
+        &=\frac{1}{\beta^{\alpha_1+\alpha_2}\Gamma(\alpha_1)\Gamma(\alpha_2)}\exp(\frac{-t}{\beta})\int_0^tx^{\alpha_1-1}(t-x)^{\alpha_2-1}dx
+    \end{align*}
+    Setting $x=\frac{t}{2}+u$ will yield something symmetric and easy to integrate. We will get a $\mathrm{Gamma}(\alpha_1+\alpha_2,\beta)$ distribution.
+\end{example}
+\newpage
+\section{Likelihood estimates}
+\subsection{Maximum Likelihood Estimates}
+\begin{definition}
+    Let $Y\sim f(y,\theta)$. We obtain a random sample of size $n$ from $f(y,\theta)$ and denote the observed data by $y=(y_1,\ldots,y_n)$.
+
+    A point estimate of a parameter is the value of a function of the observed data and other known quantities. We denote such a function as 
+    \begin{align*}
+        \hat{\theta}=\hat{\theta}(y_1,\ldots,y_n)=\hat\theta(y)
+    \end{align*}
+\end{definition}
+\begin{definition}
+    The likelihood function for $\theta$ is defined as 
+    \begin{align*}
+        L(\theta)=L(\theta;y)=\prod_{i=1}^nf(y_i;\theta)
+    \end{align*}
+    for $\theta\in\Omega$, where $\Omega$ is the possible space of all parameters.
+\end{definition}
+\begin{remark}
+    Notice that if $Y_1,\ldots,Y_n$ are i.i.d. $f(y;\theta)$ random variables, then their joint pf/pdf evaluated at $y=(y_1,\ldots,y_n)$ is precisely $L(\theta)$.
+\end{remark}
+\begin{definition}
+    The Maximum Likelihood Estimate of the likelihood function $L$ is the value of $\theta$ that maximizes $L(\theta)$. We denote this value by
+    \begin{align*}
+        \hat{\theta}=\hat{\theta}_{\mathrm{MLE}}=\arg\max_{\theta\in\Omega}L(\theta)
+    \end{align*}
+\end{definition}
+\begin{remark}
+    We sometimes work with the $\log$ of the likelihood function. Denote this by $\ell=\log L$.
+\end{remark}
+\begin{example}[Nanos Research poll]
+    Between February 22nd and 24th, 2016, Nanos Research (a Canadian public opinion and research company) conducted a survey of Canadian adults, 18 years or older, to determine support for the legalization of marijuana. The 1000 participants were recruited across Canada. Respondents were asked:
+    
+    “Do you support, somewhat support, somewhat oppose, or oppose legalizing the recreational use of marijuana?”
+
+    39\% of respondents indicated that they supported the recreational use of marijuana, while 29\% indicated that they somewhat supported the recreational use of marijuana.
+
+    Let $\theta$ be the proportion of Canadian adults who support or somewhat support the recreational use of Marijuana. Find $\hat\theta$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Compute $L(\theta)$: note that we are looking at a Bernoulli random variable with parameter $\theta$. We have that 680 respondents yield a result of 1 while 320 yield a response of 0. Thus $L(\theta)=\prod_{k=1}^{680}\theta\cdot\prod_{k=1}^{320}(1-\theta)$ (for $\theta\in[0,1]$).
+
+    We maximize $\ell$, which in turn will maximize $L$. Note that 
+    \begin{align*}
+        \ell(\theta)=\sum_{k=1}^{680}\log\theta+\sum_{k=1}^{320}\log(1-\theta)
+    \end{align*}
+    which has derivative
+    \begin{align*}
+        \ell'(\theta)=\frac{680}{\theta}-\frac{320}{1-\theta}
+    \end{align*}
+    which is 0 precisely when $680(1-\theta)-320\theta=0$, or $\theta=\frac{680}{1000}$. This is in fact a maximum and we see that $\hat{\theta}$ is precisely the proportion of positive responses.
+\end{solution}
+\begin{example}
+    In 2011, Harris/Decima (a research polling company) conducted a poll of the Canadian adult population in which they asked respondents whether they agreed with the statement:
+
+    “University and college teachers earn too much.”
+
+    In 2011, $y_2 = 540$ out of 2000 people agreed with the statement. In a previous poll conducted by Harris/Decima in 2010, $y_1 = 520$ out of 2000 people agreed with the same statement.
+
+    If we assume that $\theta$, the proportion of the Canadian adult population that agrees with the statement, is the same in both years, then $\theta$ may be estimated using the data from these two independent polls. Find $\hat\theta$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Let us estimate the proportion using two i.i.d. $\mathrm{Bin}(2000,\theta)$ rvs (since this is literally what we are sampling). We have $y=(520, 540)$ so that 
+    \begin{align*}
+        L(\theta)=\binom{2000}{520}\theta^{520}(1-\theta)^{1480}\cdot\binom{2000}{540}\theta^{540}(1-\theta)^{1460}
+    \end{align*}
+    Using the same technique as the previous example, we find that $\hat{\theta}=\frac{1060}{4000}$.
+\end{solution}
+\begin{example}
+    The number of coliform bacteria $Y$ in a random sample of water of volume $v$ milliliters is assumed to have a $\mathrm{Poisson}(v\theta)$ distribution, where $\theta$ is the average number of bacteria per milliliter of water.
+
+    There is an inexpensive test that can detect the presence (but not the number) of bacteria in a water sample. In this case, we do not observe $Y$, but rather the presence indicator $Z=I_{\{Y>0\}}$.
+
+    Suppose that $n$ water samples, of volumes $v_1,\ldots,v_n$, are selected. Let $z_1,\ldots,z_n$ be the observed values of the presence indicators. Find $\hat\theta$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Note that our distribution takes an additional parameter $v$ this time. We see that $f(z;v,\theta)$ is $\mathrm{Bern}(1-e^{-v\theta})$. Thus we get that
+    \begin{align*}
+        L(\theta)=\prod_{k=1}^n(1-e^{-v_k\theta})^{z_k}\cdot e^{-v_k\theta (1-z_k)}
+    \end{align*}
+    We must maximize this. Take the $\log$ to get that
+    \begin{align*}
+        \ell(\theta)&=\sum_{k=1}^nz_k\log(1-e^{-v_k\theta})-v_k\theta(1-z_k)\\
+    \end{align*}
+    It turns out that we need numerical methods to solve for $\hat\theta$ here.
+\end{solution}
+\begin{remark}[Newton's method/Newton-Raphson method]
+    To find $\hat\theta$, we normally find $\theta$ such that $\frac{\partial \ell}{\partial\theta}(\theta)=0$. When there is no closed-form solution, we can use Newton's method:
+
+    Set $\theta_0$ to be arbitrary. For each $i\ge 0$, define
+    \begin{align*}
+        \theta_{i+1}=\theta_i+\frac{S(\theta_i,y)}{I(\theta_i,y)}
+    \end{align*}
+    where $S(\theta,y)=\frac{\partial}{\partial \theta}\ell(\theta)$ and $I(\theta,y)=-\frac{\partial^2}{\partial\theta^2}\ell(\theta)$
+\end{remark}
+\begin{remark}
+    Let $Y$ be a random variable with pdf $f(y,\theta)$. We usually only observe $Y$ rounded to some precision, say to the nearest $\Delta$. Assume we observe outcomes $y_1,y_2,\ldots,y_n$. Then
+    \begin{align*}
+        P[\text{We observe }Y_i=y_i,i=1,\ldots,n;\theta]&=\prod_{i=1}^n\int_{\bar y_i}^{\bar y_i+\Delta}f(y,\theta)dy\\
+        &\approx\prod_{i=1}^nf(y_i,\theta)\Delta\\
+        &=\Delta^n\prod_{i=1}^nf(y_i,\theta)
+    \end{align*}
+    where $\bar y_i$ is $y_i $ rounded to the nearest $\Delta$. Since $\Delta$ is constant, we can ignore the $\Delta^n$ term when we are maximizing $L(\theta)$.
+\end{remark}
+\begin{example}
+    Let $Y\sim\mathrm{Exp}(\theta)$. Find the MLE of $Y$ for a given observation $y\in\mathbb R^n$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Let $y=(y_1,\ldots,y_n)$. We are maximizing
+    \begin{align*}
+        L(\theta;y)=\prod_{k=1}^n f(y_k;\theta)=\prod_{k=1}^n\theta e^{-\theta y_k}
+    \end{align*}
+    Taking the $\log$ yields
+    \begin{align*}
+        \ell(\theta)=\sum_{k=1}^n\log\theta-\theta y_k
+    \end{align*}
+    which has derivative
+    \begin{align*}
+        \frac{\partial\ell}{\partial\theta}(\theta)=\sum_{k=1}^n(\frac{1}{\theta}-y_k)=\frac{n}{\theta}-\sum_{k=1}^ny_k
+    \end{align*}
+    which is $0$ when $\theta=\frac{n}{\sum_{k=1}^ny_k}$. This is the MLE.
+\end{solution}
+\begin{example}
+    Find the MLE for a Gaussian/Normal distribution.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Let $y=(y_1,\ldots,y_n)$. We are maximizing
+    \begin{align*}
+        L(\mu,\sigma^2;y)=\prod_{k=1}^nf(y_k;\mu,\sigma^2)=\prod_{k=1}^n\frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac{(y_k-\mu)^2}{2\sigma^2}\right)
+    \end{align*}
+    which has $\log$ likelihood
+    \begin{align*}
+        \ell(\mu,\sigma^2)=\sum_{k=1}^n-\frac{1}{2}\log(2\pi\sigma^2)-\frac{(y_k-\mu)^2}{2\sigma^2}=-\frac{n}{2}\log(2\pi\sigma^2)-\frac{1}{2\sigma^2}\sum_{k=1}^n(y_k-\mu)^2
+    \end{align*}
+    Taking partials, we get
+    \begin{align*}
+        \frac{\partial \ell}{\partial \mu}(\mu,\sigma^2)=\frac{1}{2\sigma^2}\sum_{k=1}^n2(y_k-\mu)=\frac{1}{\sigma^2}(-n\mu+\sum_{k=1}^ny_k)
+    \end{align*}
+    and
+    \begin{align*}
+        \frac{\partial\ell}{\partial\sigma^2}(\mu,\sigma^2)=-\frac{n}{2\sigma^2}+\frac{1}{2\sigma^4}\sum_{k=1}^n(y_k-\mu)^2=\frac{1}{2\sigma^2}(-n+\frac{1}{\sigma^2}\sum_{k=1}^n(y_k-\mu)^2)
+    \end{align*}
+    It follows that in order for both partials to be $0$, we must have $\mu=\frac{1}{n}\sum_{k=1}^ny_k$ and $\sigma^2=\frac{1}{n}\sum_{k=1}^n(y_k-\mu)^2$.
+\end{solution}
+\begin{example}\label{multmle}
+    Find the MLE for a multinomial distribution $\mathrm{Mult}(n,\theta_1,\ldots,\theta_k)$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    First note that we have outcomes $(y_1,y_2,\ldots,y_N)$ where $y_i=(y_{i,1},\ldots,y_{i,k})$ and $\sum_{j=1}^ky_{i,k}=n$ for each $i$. We are optimizing for $\theta_1,\ldots,\theta_k$. Compute
+    \begin{align*}
+        L(\theta_1,\ldots,\theta_k;y)=\prod_{i=1}^nf(y_i;\theta_1,\ldots,\theta_k)=\prod_{i=1}^n\frac{n!}{y_{i,1}!\ldots y_{i,k}!}\theta_1^{y_{i,1}}\ldots\theta_k^{y_{i,k}}
+    \end{align*}
+    We get that $\log$-likelihood is
+    \begin{align*}
+        \ell(\theta_1,\ldots,\theta_k)=\sum_{i=1}^n\log\frac{n!}{y_{i,1}!\ldots y_{i,k}!}+y_{i,1}\log\theta_1+\ldots+y_{i,k}\log\theta_k
+    \end{align*}
+    We are maximizing this function with respect to the constraint that
+    \begin{align*}
+        \theta_1+\ldots+\theta_k=1.
+    \end{align*}
+    We can use Lagrange multipliers: define $g:\mathbb R^k\to\mathbb R$ so that $g(\theta)=\theta_1+\ldots+\theta_k-1=0$. We wish to maximize $\ell(\theta_1,\ldots,\theta_k)$ subject to $g(\theta_1,\ldots,\theta_k)=0$. We can compute $Dg=(1, 1, \ldots,1)$. We can also compute $(D\ell)_\theta=(\sum_{i=1}^k\frac{y_{i,1}}{\theta_1},\ldots,\sum_{i=1}^k\frac{y_{i,k}}{\theta_k})$. We thus need to find $\theta=(\theta_1,\ldots,\theta_k)$ so that $(D\ell)_\theta$ is collinear with $Dg$, which occurs when
+    \begin{align*}
+        \frac{1}{\theta_1}\sum_{i=1}^ky_{i,1}=\ldots=\frac{1}{\theta_k}\sum_{i=1}^ky_{i,k}
+    \end{align*}
+    or
+    \begin{align*}
+        \frac{\theta_1}{\sum_{i=1}^ky_{i,1}}=\ldots=\frac{\theta_k}{\sum_{i=1}^ky_{i,k}}
+    \end{align*}
+    Setting 
+    \begin{align*}
+        \theta_i=\frac{\sum_{j=1}^ky_{j,i}}{\sum_{j_1,j_2}y_{j_1,j_2}}=\frac{\sum_{j=1}^ky_{j,i}}{Nn}
+    \end{align*}
+    works and is also the unique solution since we are solving an $n\times n$ invertible linear system.
+\end{solution}
+\begin{remark}
+    There are certain constraints on the observed outcomes that need to be satisfied in order for the methods above to work.
+\end{remark}
+\begin{example}
+    Each person is one of four blood types: A, B, AB, or O. Let $\theta_1,\theta_2,\theta_3,\theta_4$ denote the proportion of the population with the respective blood types. Suppose we take a sample of 400 individuals whose blood was tested, and the numbers with each type were 
+    \begin{align*}
+        y_1=172\qquad y_2=38\qquad y_3=14\qquad y_4=176
+    \end{align*}
+    Let $Y_1,Y_2,Y_3,Y_4$ represent the number of individuals with the respective blood types. Find $(\hat\theta_1,\hat\theta_2,\hat\theta_3,\hat\theta_4)$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Remark that we are essentially doing one trial of a $\mathrm{Mult}(400,\theta_1,\theta_2,\theta_3,\theta_4)$ random variable. Using the result from \ref{multmle}, we see that $\hat\theta_i=\frac{y_i}{400}$. 
+\end{solution}
+\begin{example}
+    Find the MLE for a $\mathrm{Unif}(0,\theta)$ random variable.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Let $y_1,\ldots,y_n$ be our observations and note that they must all be nonnegative. Our likelihood function is
+    \begin{align*}
+        L(\theta;y)=\prod_{k=1}^n\frac{1}{\theta}I_{y_k\le\theta}=\frac{1}{\theta^n}I_{\max_k\{y_k\}\le\theta}
+    \end{align*}
+    Which is maximized when $\theta=\max\{y_k\}$.
+\end{solution}
+\begin{remark}
+    Let $\theta$ be a point estimate in $\Omega$ and let $f:\Omega\to\Omega'$ be a function. Remark then that $f\circ\theta$ is a point estimate. 
+
+    For example, the MLE $\hat\theta$ is a point estimate. We can compose the MLE with another function to create a new function of observed parameters.
+
+    Let $g:\Omega\to\Omega'$ be a function. Suppose $\theta$ is a parameter of some distribution $f(y;\theta)$. The likelihood function of $g(\theta)$ is defined to be the function $L^*:\Omega'\to\mathbb R$ that sends $L^*(g(\theta))=L(\theta)$.
+
+    This definition has holes: first, what happens when $\lambda\in\Omega'\setminus g(\Omega)$? It is impossible to define $L^*(\lambda)$. For this reason, we may as well assume that $g$ is surjective.
+
+    Another issue is the case where $g$ is not injective. In that case, for some $\lambda\in\Omega'$, we have no concrete definition of $L^*(\lambda)$. We remedy this by tweaking the definition:
+\end{remark}
+\begin{definition}
+    Let $f(y;\theta)$ be a distribution with parameters $\theta\in\Omega$. Let $g:\Omega\to\Omega'$ be surjective. We define the likelihood function induced by $g$ to be the function $L^*:\Omega'\to\mathbb R$ that maps
+    \begin{align*}
+        L^*(\lambda)=\sup_{\theta\in g^{-1}(\lambda)}L(\theta)
+    \end{align*}
+\end{definition}
+\begin{theorem}[Invariance Property of MLE]
+    For a distribution $f(y;\theta)$, let $\hat\theta$ be the MLE of $\theta\in\Omega$. Let $g:\Omega\to\Omega'$ be surjective. Then the MLE of $\lambda\in\Omega'$, $\hat\lambda$, is equal to $g(\hat\theta)$, provided that $\hat\theta$ and $\hat\lambda$ are unique. The MLE of $\lambda\in\Omega'$ is thus defined to be 
+    \begin{align*}
+        \hat\lambda=\arg\max L^*(\lambda).
+    \end{align*}
+\end{theorem}
+\begin{proof}
+    It is fairly clear that we must have $L^*(g(\hat\theta))=L(\hat\theta)$. and that $L^*(\lambda)\le L(\hat\theta)$ for $\lambda\in\Omega'$. Equality follows by uniqueness.
+\end{proof}
+\begin{remark}
+    In this case, we call the MLE of $\lambda$ as the MLE of $g(\theta)$. Notice that this is abuse of notation and that we have never defined a point estimate $g(\theta)$. Only when the function $g$ is injective is there a natural definition of a point estimate.
+\end{remark}
+\begin{example}
+    Suppose we want to estimate attributes associated with BMI for a population of individuals. If the distribution of BMI in the population is well-described by a Gaussian model $\mathcal N(\mu,\sigma^2)$, then by estimating $\mu$ and $\sigma$, we can estimate any attribute associated with the BMI distribution.
+
+    Suppose that we have a random sample of 150 people with BMI $y_1,\ldots,y_{150}$ and we obtain estimates
+    \begin{align*}
+        \hat\mu=27.1\qquad\hat\sigma=3.56
+    \end{align*}
+    Let us provide estimates on the following quantities:
+    \begin{enumerate}
+        \item [(i)] Mean/Median
+
+        Note that the mean is just $\mu$. By definition, the median of this distribution is value $\lambda\in\mathbb R$ satisfying $P[X\le\lambda]=\frac{1}{2}$. This occurs precisely at $\mu$ and thus the MLE of the median is $\hat\mu$.
+        \item [(ii)] The 0.1 (population) quantile
+
+        We find $\lambda=\lambda(\mu,\sigma)$ satisfying $P[X\le\lambda]=0.1$. The MLE of $\lambda$ is thus 
+        \begin{align*}
+            \hat\lambda=\lambda(\hat\mu,\hat\sigma)
+        \end{align*}
+        Using the normal chart, we see that this occurs about 1.208 standard deviations away from the mean, in other words,
+        \begin{align*}
+            \lambda=\mu-1.208\sigma
+        \end{align*}
+        Plugging the numbers in, we get approximately $\hat\lambda=22.8$.
+        \item [(iii)] The fraction of the population with BMI over 35.0
+
+        Let $\lambda=\lambda(\mu,\theta)$ be this value so that $P[X\ge35]=\lambda$ when $X\sim\mathcal N(\mu,\sigma^2)$. We see that $\lambda=1-F_X(35)$ and $F_X(35)$ is a function of $\mu$ and $\sigma$. Computing yields the solution.
+
+        ChatGPT gives approximately 1.32\%.
+    \end{enumerate}
+    
+\end{example}
+\begin{remark}
+        An important question with with likelihood estimates is the method to obtain parameters of the distribution with incomplete data. More specifically, say we run an experiment and the outcomes have complete data $\mathbf X$, which has $\log$ likelihood $\ell(\theta;\mathbf x)$. Suppose that instead of observing $\mathbf X$, we can only observe some data $\mathbf Y=\mathbf Y(\mathbf X)$, which has $\log$ likelihood $\ell^*(\lambda;\mathbf y)$. We wish to find the MLE $\hat\theta$.
+
+        We propose the following algorithm:
+\end{remark}
+\subsection{Expectation Maximization Algorithm}
+\begin{theorem}[Expectation-Maximization (E-M) algorithm]
+    In the setup above, let $\theta^{(k)}$ be the $k$th estimate of $\theta$. 
+    \begin{enumerate}
+        \item [(i)] Compute $Q(\theta,\theta^{(k)})=E[\ell(\theta,\mathbf{X})|\mathbf{Y}=\mathbf{y};\theta^{(k)}]$.
+        \item [(ii)] Maximize $Q(\theta,\theta^{(k)})$ with respect to $\theta$ and set
+        \begin{align*}
+            \theta^{(k+1)}=\arg\max_\theta Q(\theta,\theta^{(k)}).
+        \end{align*}
+    \end{enumerate}
+    Then under suitable conditions, $\{\theta^{(k)}\}_k$ converges to a point $\theta$ where $\nabla \ell(\theta,\mathbf x)=0$. (Whenever $\theta\in\mathbb R^n$)
+\end{theorem}
+\begin{example}
+    Consider the exponential distribution as a model for lifetime of equipment. Say we test $n$ pieces of equipment, but we cannot run each piece forever so we stop at time $c$. In this case, say $k$ pieces fail at times $y_1,\ldots,y_k$ and $n-k$ pieces are running at time $c$. 
+
+    Find the MLE of $\theta$ using the E-M algorithm.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    We have essentially obtained data from an i.i.d. sequence of random variables $Y_1,\ldots,Y_n$ where $Y_j=\min\{X_j,c\}$ and $X_j\sim\mathrm{Exp}(\theta)$. We can thus compute the distribution of $Y_j$.
+
+    First note that for given $\theta>0$, we have that
+    \begin{align*}
+        \ell(\theta,\mathbf{X})=\sum_{j=1}^n\log\theta-\theta\mathbf X_j=n\log\theta-\theta\sum_{j=1}^n \mathbf X_j.
+    \end{align*}
+    Thus we are computing
+    \begin{align*}
+        n\log\theta-\theta \sum_{j=1}^n\mathbf E[\mathbf X_j|\mathbf Y_j=\mathbf y_j;\theta^{(t)}]
+    \end{align*}
+    When $\mathbf y_j<c$, the expectation of $\mathbf X_j$ is just $y_j$. Otherwise, the expectation of $\mathbf X_j$ is
+    \begin{align*}
+        E[\mathbf X_j|\mathbf Y_j=\mathbf y_j;\theta^{(t)}]&=E[\mathbf X_j|\mathbf X_j\ge c;\theta^{(t)}]
+    \end{align*}
+    Now $\mathbf X_j-c;\theta^{(t)}$ follows a $\mathrm{Exp}(\theta^{(t)})$ distribution by memorylessness and thus we get that the expectation is
+    \begin{align*}
+        E[\mathbf X_j|\mathbf X_j\ge c;\theta^{(t)}]=c+E[\mathbf X_j]=c+\frac{1}{\theta^{(t)}}
+    \end{align*}
+    As such, we have that $E[\mathbf X_j|\mathbf Y_j=\mathbf y_j;\theta^{(t)}]=\mathbf y_j$ when $j\le k$ and $c+\frac{1}{\theta^{(t)}}$ when $k+1\le j\le n$.
+    
+    Thus
+    \begin{align*}
+        E[\ell(\theta;\mathbf X)|\mathbf Y=\mathbf y;\theta^{(t)}]=n\log \theta-\theta\sum_{j=1}^ky_j-\theta(n-k)(c+\frac{1}{\theta^{(t)}})
+    \end{align*}
+    Let us differentiate in advance. The derivative is
+    \begin{align*}
+        \frac{n}{\theta}-\sum_{j=1}^ky_j-(n-k)(c+\frac{1}{\theta^{(t)}})
+    \end{align*}
+    which is $0$ precisely when $\theta=\frac{n}{\sum_{j=1}^ky_j+(n-k)(c+\frac{1}{\theta^{(t)}})}$. We can thus iterate this procedure and get $\theta^{(t+1)}=\frac{n}{\sum_{j=1}^ky_j+(n-k)(c+\frac{1}{\theta^{(t)}})}$. 
+
+    Let us make a substitution: let $\sum_{j=1}^ky_j=S$. We have that
+    \begin{align*}
+        \theta^{(t+1)}=\frac{n}{S+(n-k)(c+\frac{1}{\theta^{(t)}})}
+    \end{align*}
+    Notice that we can just find a fixed point to maximize likelihood. We are solving for
+    \begin{align*}
+        \hat\theta=\frac{n}{S+(n-k)(c+\hat\theta^{-1})}\\
+        (S+(n-k)(c+\hat\theta^{-1}))\hat\theta=n\\
+        -c \hat\theta k + c \hat\theta n - k + n + \hat\theta S=n\\
+        \hat\theta(S+c(n-k))=k\\
+        \hat\theta=\frac{k}{S+c(n-k)}
+    \end{align*}
+\end{solution}
+\begin{example}
+    Suppose $\mathbf X=(X_1,\ldots,X_n)$ is a random sample for $\mathrm{POI}(\theta)$. However, instead of observing $\mathbf X=\mathbf x$, we observe
+    \begin{enumerate}
+        \item [(i)] $Y_i=X_i$ if $X_i$ is even
+        \item [(ii)] $Y_i=X_i-1$ if $X_i$ is odd
+    \end{enumerate}
+    Find the MLE of $\theta$ using the E-M algorithm.
+\end{example}
+\begin{solution}
+    First let us compute $\ell(\theta;x)$. Recall that a Poisson distribution has pf $f(x;\theta)=\frac{e^{-\theta}\theta^x}{x!}$ for $x=0,1,\ldots$. Thus the $\log$ likelihood is
+    \begin{align*}
+        \ell(\theta;\mathbf x)&=\sum_{j=1}^n-\log x_j!-\theta+x_j\log\theta\\
+        &=-n\theta+\log\theta\sum_{j=1}^nx_j-\sum_{j=1}^n\log x_j!
+    \end{align*}
+    We compute
+    \begin{align*}
+        E[\ell(\theta;\mathbf X)|\mathbf Y=\mathbf y;\theta^{(t)}]=-n\theta+\log\theta\sum_{j=1}^nE[X_j|Y_j=y_j;\theta^{(t)}]-\sum_{j=1}^nE[\log X_j!|Y_j=y_j;\theta^{(t)}]
+    \end{align*}
+    Let us compute the two expectations. Note that when $Y_j=y_j$, we have that $X_j=Y_j$ or $X_j=Y_j+1$. Thus we can compute
+    \begin{align*}
+        P[X_j=y_j|Y_j=y_j;\theta^{(t)}]&=\frac{P[X_j=y_j,Y_j=y_j]}{P[Y_j=y_j]}\\
+        &=\frac{P[X_j=y_j]}{P[Y_j=y_j]}\\
+        &=\frac{f(y_j;\theta^{(t)})}{f(y_j;\theta^{(t)})+f(y_j+1;\theta^{(t)})}\\
+        &=\frac{(\theta^{(t)})^{y_j}}{(\theta^{(t)})^{y_j}+\frac{1}{(y_j+1)}(\theta^{(t)})^{y_j+1}}
+    \end{align*}
+    and similarly,
+    \begin{align*}
+        P[X_j=y_j+1|Y_j=y_j;\theta^{(t)}]=\frac{\frac{1}{(y_j+1)}(\theta^{(t)})^{y_j+1}}{(\theta^{(t)})^{y^j}+\frac{1}{(y_j+1)}(\theta^{(t)})^{y_j+1}}
+    \end{align*}
+    We thus see that
+    \begin{align*}
+        E[X_j|Y_j=y_j;\theta^{(t)}]=\frac{y_j(\theta^{(t)})^{y_j}}{(\theta^{(t)})^{y_j}+\frac{1}{(y_j+1)}(\theta^{(t)})^{y_j+1}}+\frac{(\theta^{(t)})^{y_j+1}}{(\theta^{(t)})^{y^j}+\frac{1}{(y_j+1)}(\theta^{(t)})^{y_j+1}}
+    \end{align*}
+    Similarly,
+    \begin{align*}
+        E[\log X_j!|Y_j=y_j;\theta^{(t)}]=\frac{\log(y_j!)(\theta^{(t)})^{y_j}}{(\theta^{(t)})^{y_j}+\frac1{(y_j+1)}(\theta^{(t)})^{y_j+1}}+\frac{\frac{\log((y_j+1)!)}{(y_j+1)}(\theta^{(t)})^{y_j+1}}{(\theta^{(t)})^{y_j}+\frac1{(y_j+1)}(\theta^{(t)})^{y_j+1}}
+    \end{align*}
+    Notice that we didn't even need to compute $E[\log X_j!|Y_j=y_j;\theta^{(t)}]$ since it is independent of $\theta$. So I wasted like 5 minutes.
+
+    Differentiating $Q(\theta,\theta^{(t)})$ yields
+    \begin{align*}
+        \frac{\partial Q}{\partial \theta}=-n+\frac{1}{\theta}\sum_{j=1}^n\frac{y_j(\theta^{(t)})^{y_j}}{(\theta^{(t)})^{y_j}+\frac{1}{(y_j+1)}(\theta^{(t)})^{y_j+1}}+\frac{(\theta^{(t)})^{y_j+1}}{(\theta^{(t)})^{y_j}+\frac{1}{(y_j+1)}(\theta^{(t)})^{y_j+1}}
+    \end{align*}
+    We can simplify this as 
+    \begin{align*}
+        \frac{\partial Q}{\partial \theta} = -n + \frac{1}{\theta}\sum_{j=1}^n\left(y_j + \frac{\theta^{(t)}}{y_j+1+\theta^{(t)}}\right)
+    \end{align*}
+    Setting this equal to $0$, we get
+    \begin{align*}
+        \theta^{(t+1)}=\frac{\sum_{j=1}^n\left(y_j + \frac{\theta^{(t)}}{y_j+1+\theta^{(t)}}\right)}{n}
+    \end{align*}
+    So we must find a fixed point of this sequence. We solve
+    \begin{align*}
+        n\theta=\sum_{j=1}^n\left(y_j+\frac{\theta}{y_j+1+\theta}\right)\\
+    \end{align*}
+    Unfortunately there does not seem to be a closed form solution.
+\end{solution}
+\newpage
+\section{Sampling distributions}
+\subsection{Definitions}
+\begin{remark}
+    To investigate properties of estimates, we note that our estimate $\hat\theta=\hat\theta(y)$ depends on the observed sample $Y=y$. Remark that we can take these samples over and over again to get different estimates. In other words, $\hat\theta(y)$ is an outcome of the random variable $\hat\theta(Y)$. We would probably expect $E[\hat\theta(Y)]\approx\theta$ where $\theta$ is the actual parameter. We will investigate this in detail.
+\end{remark}
+\begin{definition}
+    A point estimator is a random variable which is a function $\hat\theta(Y)$ of the random sample $Y=(Y_1,\ldots,Y_n)$.
+\end{definition}
+\begin{remark}
+    A point estimate is a value of this function at a specific outcome $y=(y_1,\ldots,y_n)$ of $Y$.
+\end{remark}
+\begin{definition}
+    The distribution of an estimator $\hat\theta(Y)$ is called the sampling distribution of this estimator.
+\end{definition}
+\begin{example}
+    Suppose $(Y_1,\ldots,Y_n)$ is a random sample from $N(\mu,\sigma^2)$. Find the sampling distribution of $\hat\mu(Y)=\bar Y=\sum_{i=1}^n\frac{Y_i}{n}$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    First note that the sampling distribution is indeed given by the above formula.
+
+    We thus need to find the distribution of $\bar Y$. Note that $\bar Y=\sum_{i=1}^n\frac{Y_i}{n}$ and $\frac{Y_i}{n}\sim N(\frac{\mu}{n},\frac{\sigma^2}{n^2})$ so 
+    \begin{align*}
+        \hat\mu(Y)\sim N(\sum_{i=1}^n\frac{\mu}{n},\sum_{i=1}^n\frac{\sigma^2}{n^2})=N(\mu,\frac{\sigma^2}{n})
+    \end{align*}
+\end{solution}
+\begin{example}
+    Do the same for the exponential distribution ($Y_i\sim\mathrm{Exp}(\theta)$).
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Recall that the MLE $\hat\theta=\hat\theta(y)$ is
+    \begin{align*}
+        \hat\theta(y)=\sum_{i=1}^n\frac{y_i}{n}.
+    \end{align*}
+    Thus we must find the distribution of $\bar Y$. But we can note that $\frac{Y_i}{n}\sim\mathrm{Exp}(\frac{\theta}{n})$ so
+    \begin{align*}
+        \sum_{i=1}^nY_i\sim\mathrm{Gamma}(n,\frac{\theta}{n}).
+    \end{align*}
+\end{solution}
+\begin{theorem}[Central limit theorem]
+    Suppose $(Y_1,\ldots,Y_n)$ is an iid random sample of some distribution with $E[Y_i]=\mu$ and $\mathrm{Var}(Y_i)=\sigma^2<\infty$. Then as $n\to\infty$, the sequence of random variables
+    \begin{align*}
+        Z_n=\frac{\sqrt{n}(\bar Y-\mu)}{\sigma}
+    \end{align*}
+    converges to an $N(0,1)$ distribution.
+\end{theorem}
+\begin{proposition}[Markov]
+    For any random variable $X$ with $E[|X|^k]<\infty$ (i.e. $X\in L^k$),
+    \begin{align*}
+        P[|X|\ge c]\le\frac{E[|X|^k]}{c^k}
+    \end{align*}
+    for all $c>0$ and $k>0$.
+\end{proposition}
+\begin{proof}
+    Straightforward. 
+    \begin{align*}
+        P[|X|^k\ge c^k]=P[|X|\ge c]=E[I_{|X|^k\ge c^k}]\le E[\frac{|X|^k}{c^k}]=\frac{E[|X|^k]}{c^k}.
+    \end{align*}
+\end{proof}
+\begin{proposition}[Chebyshev]
+    For any random variable $X$ with $E[X]=\mu<\infty$ and $\mathrm{Var}(X)=\sigma^2$,
+    \begin{align*}
+        P[|X-\mu|\ge\beta\sigma]\le\frac{1}{\beta^2}
+    \end{align*}
+    for all $\beta>0$.
+\end{proposition}
+\begin{proof}
+    Just apply Markov on $|X-\mu|$ and $\beta\sigma$. We get
+    \begin{align*}
+        P[|X-\mu|\ge\beta\sigma]\le\frac{E[|X-\mu|^2]}{\beta^2\sigma^2}=\frac{\mathrm{Var}(X)}{\beta^2\sigma^2}=\frac{1}{\beta^2}
+    \end{align*}
+\end{proof}
+\begin{example}
+    Suppose $(Y_1,\ldots,Y_n)$ is a random sample from $\mathrm{Poi}(\theta)$. Find the approximate sampling distribution of $\hat\theta(Y)=\bar Y=\sum_{i=1}^n\frac{Y_i}{n}$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Remark that 
+    \begin{align*}
+        \bar Y=\frac{\sqrt n(\bar Y-\theta)}{\sqrt{\theta}}\cdot\frac{\sqrt\theta}{\sqrt n}+\theta
+    \end{align*}
+    and $\frac{\sqrt n(\bar Y-\theta)}{\sqrt{\theta}}$ is approximately $N(0,1)$. Thus $\bar Y$ is approximately distributed according to a $N(\theta,\frac{\theta}{n})$ random variable.
+\end{solution}
+\begin{example}
+    Suppose $Y\sim \mathrm{Bin}(n,\theta)$. Find the approximate sampling distribution of $\hat\theta(Y)=\frac{Y}{n}$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    The distribution of $Y$ tends to a normal distribution as $n\to\infty$. Specifically, when we write $Y$ as a sum of iid Bernoulli random variables, we get that $Y=Y_1+\ldots+Y_n$ so that
+    \begin{align*}
+        \bar Y=\frac{\sqrt{n}(\bar Y-\theta)}{\sqrt{\theta(1-\theta)}}\cdot\frac{\sqrt{\theta(1-\theta)}}{\sqrt n}+\theta
+    \end{align*}
+    is approximately a $N(\theta,\frac{\theta(1-\theta)}{n})$ distribution. Notice that as $\theta\to 1$ or $\theta\to 0$, the variance gets smaller.
+\end{solution}
+\begin{example}
+    Suppose $(Y_1,\ldots,Y_n)$ is a random sample from $\mathrm{Exp}(\theta)$. Find the approximate sampling distribution of $\hat\theta(Y)=\bar Y=\sum_{i=1}^n\frac{Y_i}{n}$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    At this point it should be fairly apparent that $\hat\theta$ follows an $N(\mu,\sigma^2/n)$ distribution where $\mu=E[Y_i]$ and $\sigma^2=\mathrm{Var}(Y_i)$. This yields a $N(\theta,\frac{\theta^2}{n})$.
+\end{solution}
+\begin{definition}
+    The bias of an estimator $\hat\theta(Y)$ is given by 
+    \begin{align*}
+        \mathrm{Bias}(\hat\theta)=E[\hat\theta]-\theta.
+    \end{align*}
+    In other words, the bias is the expected error in the estimator.
+\end{definition}
+\begin{definition}
+    If the bias is equal to 0, then the estimator is said to be unbiased.
+\end{definition}
+\begin{remark}
+    An unbiased estimator will be correct "on average".
+\end{remark}
+\begin{remark}
+    If we have multiple unbiased estimators, we would like to choose the one with the least variance.
+\end{remark}
+\begin{definition}
+    The mean-square error (MSE) of an estimator is given by 
+    \begin{align*}
+        E[(\hat\theta-\theta)^2].
+    \end{align*}
+\end{definition}
+\begin{theorem}
+    The following holds:
+    \begin{align*}
+        E[(\hat\theta-\theta)^2]=\mathrm{Var}(\hat\theta)+\mathrm{Bias}(\hat\theta)^2.
+    \end{align*}
+\end{theorem}
+\begin{proof}
+    Easy computation:
+    \begin{align*}
+        \mathrm{Var}(\hat\theta)+\mathrm{Bias}(\hat\theta)^2=E[\hat\theta^2]-E[\hat\theta]^2+(E[\hat\theta]-\theta)^2=E[\hat\theta]^2-2\theta E[\hat\theta]+\theta^2=E[(\hat\theta-\theta)^2].
+    \end{align*}
+\end{proof}
+\begin{corollary}
+    If $\hat\theta$ is unbiased, then the MSE is just the variance of $\hat\theta$.
+\end{corollary}
+\begin{example}
+    Let $X_i\sim U(0,\theta)$ be i.i.d. for $i=1,\ldots,n$. Compare the following MSE's of $\theta$:
+    \begin{align*}
+        2\bar X,\,X_{(n)},\,(n+1)X_{(1)}.
+    \end{align*}
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    We compute:
+    \begin{align*}
+        E[(2\bar X-\theta)^2]&=\mathrm{Var}(2\bar X)+E[2\bar X-\theta]^2\\
+        &=\frac{4}{n^2}\sum_{i=1}^n\mathrm{Var}(X_i)+(\frac{2}{n}\sum_{i=1}^nE[X_i]-\theta)^2\\
+        &=\frac{4}{n^2}\sum_{i=1}^n\frac{\theta^2}{12}\\
+        &=\frac{\theta^2}{3n}
+    \end{align*}
+    Now the distribution of $X_{(n)}$ is given by $P[X_{(n)}\le t]=P[X_1\le t]^n=\frac{t^n}{\theta^n}$ for $0\le t\le \theta$. It follows that
+    \begin{align*}
+        E[(X_{(n)}-\theta)^2]&=\int_0^\theta (t-\theta)^2\cdot\frac{nt^{n-1}}{\theta^n}dt\\
+        &=\int_{0}^\theta\frac{nt^{n+1}}{\theta^n}dt-2\theta\int_0^\theta\frac{nt^n}{\theta^n}dt+\theta^2\int_0^\theta\frac{nt^{n-1}}{\theta^n}dt\\
+        &=\frac{n\theta^2}{n+2}-\frac{2n\theta^2}{n+1}+\theta^2\\
+        &=\frac{2\theta^2}{(n+1)(n+2)}.
+    \end{align*}
+    Finally note that the distribution of $X_{(1)}$ is given by $P[X_{(1)}\ge t]=P[X_1\ge t]^n=\frac{(\theta-t)^n}{\theta^n}$ so that
+    \begin{align*}
+        E[((n+1)X_{(1)}-\theta)^2]&=\int_0^\theta((n+1)t-\theta)^2\cdot\frac{n(\theta-t)^{n-1}}{\theta^n}dt\\
+        &=\frac{n}{n+2}\theta^2
+    \end{align*}
+    We can see that the second estimator is the best as $n\to\infty$ and the third estimator is the worst.
+\end{solution}
+\begin{example}
+    Let $X_i\sim N(\mu,1)$ be i.i.d. Compare the estimators $\bar X$ and $X_1$.
+\end{example}
+\begin{solution}
+    Note that both of these estimators are unbiased. Thus we see that the MSE of $\bar X$ is equal to $\frac{1}{n}$ and the MSE of $X_1$ is 1. It follows that $\bar X$ is a better estimator for $\mu$.
+\end{solution}
+\begin{example}
+    Say $X_i\sim N(\mu,\sigma^2)$ are i.i.d. 
+    \begin{enumerate}
+        \item First suppose $\mu$ is known. How does this change $\hat\sigma_{\mathrm{MLE}}^2$? Is $\hat\sigma^2_{\mathrm{MLE}}$ unbiased?
+
+        Let us compute $\hat\sigma^2$. The likelihood function is
+        \begin{align*}
+            L(x)=\prod_{i=1}^nf(x_i;\mu,\sigma^2)
+        \end{align*}
+        so that the log likelihood is
+        \begin{align*}
+            \ell(x)=\sum_{i=1}^n\left(-\frac{1}{2}\log(2\pi\sigma^2)-\frac{(x_i-\mu)^2}{2\sigma^2}\right)
+        \end{align*}
+        which has derivative with respect to $\sigma^2$:
+        \begin{align*}
+            \frac{\partial\ell}{\partial \sigma^2}(x)&=\sum_{i=1}^n\left(-\frac{1}{2\sigma^2}+\frac{(x_i-\mu)^2}{2\sigma^4}\right)\\
+            &=-\frac{n}{2\sigma^2}+\frac{1}{2\sigma^4}\sum_{i=1}^n(x_i-\mu)^2
+        \end{align*}
+        This is equal to 0 when
+        \begin{align*}
+            n\sigma^2=\sum_{i=1}^n(x_i-\mu)^2
+        \end{align*}
+        or 
+        \begin{align*}
+            \hat\sigma^2=\frac{1}{n}\sum_{i=1}^n(x_i-\mu)^2
+        \end{align*}
+        which is the same MLE as when both parameters are unknown except for the fact that $\mu$ is not dependent on the values of $x_i$.
+
+        We now calculate the bias. Note that 
+        \begin{align*}
+            E[\hat\sigma^2]&=\frac{1}{n}\sum_{i=1}^nE[(X_i-\mu)^2]\\
+            &=\frac{1}{n}\sum_{i=1}^n\mathrm{Var}(X_i-\mu)\\
+            &=\sigma^2.
+        \end{align*}
+        It follows that $\hat\sigma^2$ is unbiased.
+        \item When $\mu$ is unknown, is $\hat\sigma^2_{\mathrm{MLE}}$ biased or unbiased?
+
+        Recall that $\hat\sigma^2=\frac{1}{n}\sum_{i=1}^n(X_i-\bar X)^2$ in this case. Computing the expectation, we get
+        \begin{align*}
+            E[\hat\sigma^2]&=\frac{1}{n}\sum_{i=1}^nE[(X_i-\bar X)^2]\\
+            &=E[(X_1-\bar X)^2]\\
+            &=E[X_1^2]-2E[X_1\bar X]+E[\bar X^2]\\
+            &=\mathrm{Var}(X_1)+E[X_1]^2+\mathrm{Var}(\bar X)+E[\bar X]^2-2E[X_1\bar X]\\
+            &=\sigma^2+\mu^2+\frac{\sigma^2}{n}+\mu^2-2E[\frac{1}{n}X_1^2]-2E[X_1(\bar X-\frac{1}{n}X_1)]\\
+            &=\frac{n+1}{n}\sigma^2+2\mu^2-\frac{2}{n}(\sigma^2+\mu^2)-2E[X_1]E[\frac{1}{n}\sum_{i=2}^nX_i]\\
+            &=\frac{n+1}{n}\sigma^2+2\mu^2-\frac{2}{n}(\sigma^2+\mu^2)-2\mu\cdot\frac{n-1}{n}\mu\\
+            &=\frac{n-1}{n}\sigma^2
+        \end{align*}
+        so that the bias is $-\frac{1}{n}\sigma^2$ (i.e. $\hat\sigma^2$ is biased).
+        \item When $\mu$ is unknown, denote $\hat\sigma^2_\alpha=\alpha\sum_{i=1}^n(X_i-\bar X)^2$. What choice of $\alpha$ minimizes the MSE of $\hat\sigma^2_\alpha$?
+
+        Note that the bias of $\hat\sigma^2_\alpha$ is 
+        \begin{align*}
+            \mathrm{Bias}(\hat\sigma^2_\alpha)=\frac{n-1}{n}\alpha\sigma^2-\sigma^2=\sigma^2\left(\frac{n-1}{n}\alpha-1\right).
+        \end{align*}
+        We only need to compute the variance. It turns out that this is a fucking nasty computation if we don't have any other tools.
+
+        Let's blackbox this for now and note that
+        \begin{align*}
+            \mathrm{Var}(\sum_{i=1}^n(X_i-\bar X)^2)=2\sigma^4(n-1).
+        \end{align*}
+        It follows that the MSE is
+        \begin{align*}
+            \sigma^4\left(\frac{n-1}{n}\alpha-1\right)^2+\frac{2\alpha^2\sigma^4(n-1)}{n^2}
+        \end{align*}
+        We wish to minimize this with respect to $\alpha$. This is a straightforward computation. We get $\alpha=\frac{1}{n+1}$.
+    \end{enumerate}
+\end{example}
+\subsection{Cramer-Rao Lower Bound}
+\begin{theorem}[Cramer-Rao Lower Bound]
+    Suppose $X=(X_1,\ldots,X_n)$ is a random sample from $f(x;\theta)$. Denote $J(\theta)=E[I(\theta;X)]$ where 
+    \begin{align*}
+        I(\theta;x)=-\frac{\partial }{\partial\theta}S(\theta;x)=-\frac{\partial^2}{\partial\theta^2}\ell(\theta;x).
+    \end{align*}
+    For any unbiased estimator $T(X)$ of $\tau(\theta)$, its variance has a lower bound 
+    \begin{align*}
+        \mathrm{Var}(T(X))\ge\frac{(\tau'(\theta))^2}{J(\theta)}
+    \end{align*}
+    where $\tau'(\theta)=\frac{d}{d\theta}\tau(\theta)$.
+\end{theorem}
+\begin{proof}
+    First remark that an unbiased estimator $T$ is a function of $x$ independent of $\theta$ that satisfies $E[T(X)]=\tau(\theta)$ for each $\theta$. Let us fix $\theta$. To compute the variance, we can compute
+    \begin{align*}
+        E[T(X)^2]-E[T(X)]^2.
+    \end{align*}
+    We only need to compute $E[T(X)^2]$.
+
+    
+    Let us compute $E[\frac{\partial}{\partial\theta}\log f(X;\theta)]=E[\frac{1}{f(X;\theta)}\frac{\partial}{\partial\theta}f(X;\theta)]$. We get
+    \begin{align*}
+        E[\frac{1}{f(X;\theta)}\frac{\partial}{\partial\theta}f(X;\theta)]&=\int_{\mathbb R^n}f(x;\theta)\frac{1}{f(x;\theta)}\frac{\partial}{\partial\theta}f(x;\theta)dx\\
+        &=\int_{\mathbb R^n}\frac{\partial}{\partial\theta}f(x;\theta)dx\\
+        &=\frac{\partial}{\partial\theta}\int_{\mathbb R^n}f(x;\theta)dx\\
+        &=0
+    \end{align*}
+    under sufficiently nice conditions.
+
+    Let $V=\frac{\partial}{\partial\theta}\log f(X;\theta)$ so that $E[V]=0$. Consider $\mathrm{Cov}(V,T(X))=E[V\cdot T(X)]-E[V]E[T(X)]=E[V\cdot T(X)]$. Computing, we get
+    \begin{align*}
+        E[V\cdot T(X)]&=\int_{\mathbb R^n}f(x;\theta)\cdot\frac{1}{f(x;\theta)}\cdot(\frac{\partial}{\partial\theta}f(x;\theta))\cdot T(x)dx\\
+        &=\int_{\mathbb R^n}\frac{\partial }{\partial\theta} f(x;\theta )T(x)dx\\
+        &=\frac{\partial}{\partial\theta}\int_{\mathbb R^n}f(x;\theta)T(x)dx\\
+        &=\frac{\partial}{\partial\theta}E[T(X)]\\
+        &=\frac{\partial}{\partial\theta}\tau(\theta)\\
+        &=\tau'(\theta).
+    \end{align*}
+    We furthermore see using Cauchy-Schwarz that
+    \begin{align*}
+        \mathrm{Var}(T(X))\mathrm{Var}(V)&\ge\mathrm{Cov}(T(X),V)^2\\
+        &=\tau'(\theta)^2
+    \end{align*}
+    and we also note that
+    \begin{align*}
+        \mathrm{Var}(V)&=E[V^2]\\
+        &=\int_{\mathbb R^n}f(x;\theta)\left(\frac{\partial}{\partial\theta}\log f(x;\theta)\right)^2dx\\
+        &=\int_{\mathbb R^n}f(x;\theta)\left(\frac{1}{f(x;\theta)}\frac{\partial}{\partial\theta}f(x;\theta)\right)^2dx\\
+        &=\int_{\mathbb R^n}\frac{1}{f(x;\theta)}\left(\frac{\partial}{\partial\theta}f(x;\theta)\right)^2dx\\
+        &=\int_{\mathbb R^n}\left(\frac{\partial^2}{\partial\theta^2}f(x;\theta)-f(x;\theta)\frac{\partial^2}{\partial\theta^2}\log f(x;\theta)\right)dx\tag{Compute $\frac{\partial^2}{\partial\theta^2}\log f(x;\theta)$}\\
+        &=\frac{\partial^2}{\partial\theta^2}\int_{\mathbb R^n}f(x;\theta)dx-E[\frac{\partial^2}{\partial\theta^2}\log f(X;\theta)]\\
+        &=J(\theta).
+    \end{align*}
+    Dividing both sides by $\mathrm{Var}(V)$ gives the desired result.
+\end{proof}
+\begin{definition}
+    The efficiency of an unbiased estimator $T$ is given by
+    \begin{align*}
+        \mathrm{Eff}(T)=\frac{CRLB}{\mathrm{Var}(T)}.
+    \end{align*}
+\end{definition}
+\begin{example}
+    Let $X_i\sim N(\theta,4)$. Determine the Cramer-Rao lower bound for all unbiased estimators of $\theta$, and find the efficiency of the MLE.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Recall that the log-likelihood function for $X$ is
+    \begin{align*}
+        \ell(\theta;x)=\sum_{i=1}^n-\frac{1}{2}\log(8\pi)-\frac{(x_i-\theta)^2}{8}=-\frac{n\log 8\pi}{2}-\sum_{i=1}^n\frac{(x_i-\theta)^2}{8}.
+    \end{align*}
+    It follows that the second derivative with respect to $\theta$ is
+    \begin{align*}
+        -\frac{\partial^2\ell}{\partial\theta^2}(\theta;x)=\sum_{i=1}^n\frac{1}{4}=\frac{n}{4}.
+    \end{align*}
+    The mean of this value is just $\frac{n}{4}$ and it follows that the Cramer-Rao lower bound is $\frac{4}{n}$.
+
+    Recall now that the MLE for $\theta$ is just $\bar X$, which happens to also have variance $\frac{4}{n}$ in this case. Thus the efficiency of $\hat\theta_{\mathrm{MLE}}$ is 100\%.
+\end{solution}
+\begin{example}
+    Do the same when $X_i\sim\mathrm{Bin}(n,\theta)$ for $1\le i\le k$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    The log-likelihood function is
+    \begin{align*}
+        \ell(\theta;x)=\sum_{i=1}^k\log\binom{n}{x_i}+x_i\log\theta+(n-x_i)\log(1-\theta)
+    \end{align*}
+    so that
+    \begin{align*}
+        -\frac{\partial^2\ell}{\partial\theta^2}(\theta;x)=\sum_{i=1}^k\frac{x_i}{\theta^2}+\frac{n-x_i}{(1-\theta)^2}.
+    \end{align*}
+    It follows that the mean of this value is
+    \begin{align*}
+        E[-\frac{\partial^2\ell}{\partial\theta^2}(\theta;X)]&=\sum_{i=1}^k\frac{1}{\theta^2}E[X_i]+\frac{1}{(1-\theta)^2}(n-E[x_i])\\
+        &=\sum_{i=1}^k\frac{n}{\theta}+\frac{n}{1-\theta}\\
+        &=k\left(\frac{n}{\theta}+\frac{n}{1-\theta}\right)
+    \end{align*}
+    and the Cramer-Rao lower bound is
+    \begin{align*}
+        \mathrm{CRLB}=\frac{1}{k\left(\frac{n}{\theta}+\frac{n}{1-\theta}\right)}=\frac{\theta(1-\theta)}{kn}.
+    \end{align*}
+    The MLE is given by $\hat\theta_{\mathrm{MLE}}=\frac{\sum_{i=1}^kX_i}{nk}$ which has variance
+    \begin{align*}
+        \mathrm{Var}(\hat\theta_{\mathrm{MLE}})&=\frac{1}{(nk)^2}\sum_{i=1}^kn\theta(1-\theta)\\
+        &=\frac{1}{nk}\theta(1-\theta)
+    \end{align*}
+    It follows that the MLE is 100\% efficient. Note that the MLE is indeed unbiased.
+\end{solution}
+\begin{example}
+    Do the same thing when $X_i\sim N(0,\theta)$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Note that we are estimating $\theta=\sigma^2$. The log-likelihood function here is 
+    \begin{align*}
+        \ell(\theta;x)=\sum_{i=1}^n-\frac{1}{2}\log(2\pi\theta)-\frac{x_i^2}{2\theta}=-\frac{n\log 2\pi\theta}{2}-\sum_{i=1}^n\frac{x_i^2}{2\theta}.
+    \end{align*}
+    The second derivative here is
+    \begin{align*}
+        -\frac{\partial^2\ell}{\partial\theta^2}(\theta;x)=\frac{n}{2\theta^2}+\sum_{i=1}^n\frac{x_i^2}{4\theta^3}
+    \end{align*}
+    which has mean $\frac{n}{2\theta^2}$. It follows that the Cramer-Rao lower bound is $\frac{2\theta^2}{n}$
+    
+    Now recall that the MLE of $\theta$ is given by
+    \begin{align*}
+        \hat\theta_{\mathrm{MLE}}=\frac{1}{n}\sum_{i=1}^nX_i^2
+    \end{align*}
+    so that the variance is
+    \begin{align*}
+        \mathrm{Var}(\hat\theta_{\mathrm{MLE}})&=\frac{1}{n^2}\sum_{i=1}^n\mathrm{Var}(X_i^2)\\
+        &=\frac{1}{n}(E[X_1^4]-E[X_1^2]^2)\\
+        &=\frac{1}{n}(3\theta^2-\theta^2)\\
+        &=\frac{2\theta^2}{n}
+    \end{align*}
+    where the calculation for $E[X_1^4]$ is given by brute forcing the fourth derivative of the mgf. It follows that the MLE is 100\% efficient.
+\end{solution}
+\subsection{Set estimation}
+\begin{remark}
+    Up until now, we have only provided exact estimates of the parameter. These are called point estimates. We may perhaps instead wish to find a set (namely, an interval) in which we are confident that the parameter lies in. An example of this is an interval estimate: given observed data $\mathbf{y}$, an interval estimate takes the form $[L(\mathbf{y}),U(\mathbf{y})]$. Then the interval $[L(\mathbf{Y}),U(\mathbf{Y})]$ is called a random interval.
+\end{remark}
+\begin{definition}
+    A $100p\%$ confidence interval for a parameter $\theta$ is an interval estimate $L(\mathbf{Y})\le U(\mathbf{Y})$ such that
+    \begin{align*}
+        P[L(\mathbf{Y})\le\theta\le U(\mathbf{Y})]=p.
+    \end{align*}
+    The value $p$ is called a confidence level/coefficient.
+\end{definition}
+\begin{remark}
+    Common choices of $p$ are 0.9, 0.95, and 0.99.
+\end{remark}
+\begin{example}
+    Suppose $Y_1,\ldots,Y_n$ are i.i.d. random variables from $N(\theta,1)$. Consider the interval 
+    \begin{align*}
+        [\bar Y-1.96/\sqrt{n},\bar Y+1.96/\sqrt{n}].
+    \end{align*}
+    What is the confidence level of this confidence interval for $\theta$?
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    This is a straightforward compution: note that $\bar Y\sim N(\theta,1/n)$ so that
+    \begin{align*}
+        P[\bar Y-1.96/\sqrt{n}\le\theta\le \bar Y+1.96/\sqrt{n}]&=P[\theta-1.96/\sqrt{n}\le\bar Y\le\theta+1.96/\sqrt{n}]\\
+        &=F(\theta+\frac{1.96}{\sqrt{n}})-F(\theta-\frac{1.96}{\sqrt{n}})\\
+    \end{align*}
+    In other words, we are looking at the probability that a normal random variable is within 1.96 standard deviations away from the mean. From the z-score table, we see that this is approximately 95\%.
+\end{solution}
+\begin{remark}
+    Note that both $L$ and $U$ don't depend on $\theta$. Furthermore, the confidence level also doesn't depend on $\theta$. This is highly desirable.
+\end{remark}
+\begin{definition}
+    A pivotal quantity $Q=Q(\mathbf{Y};\theta)$ is a function of the random sample $\bar Y$ and the unknown parameter $\theta$ such that the distribution of $Q$ is fully known.
+\end{definition}
+\begin{remark}
+    A pivotal quantity can be used to construct a confidence interval by setting
+    \begin{align*}
+        P[a\le Q(\mathbf{Y};\theta)\le b]=p
+    \end{align*}
+    and rewriting it in the form
+    \begin{align*}
+        P[L(\mathbf{Y})\le \theta\le U(\mathbf{Y})]=p.
+    \end{align*}
+\end{remark}
+\begin{remark}
+    For most models, it is not possible to find exact pivotal quantities. We can however find quantities $Q_n=Q_n(\mathbf{Y};\theta)$ such that the distribution of $Q_n$ converges to some known distribution. We provide a definition below:
+\end{remark}
+\begin{definition}
+    An approximate pivotal quantity is a sequence of functions $Q_n$ of $\mathbf Y$ and $\theta$ such that $Q_n(\mathbf{Y};\theta)$ converges in distribution to some known distribution $Q$.
+\end{definition}
+\begin{example}
+    Suppose $Y\sim\mathrm{Bin}(n,\theta)$. From CLT, we know that approximately
+    \begin{align*}
+        Q_{1n}=\frac{Y-n\theta}{\sqrt{n\theta(1-\theta)}}\sim N(0,1).
+    \end{align*}
+    We can show that approximately
+    \begin{align*}
+        Q_n=\frac{Y-n\theta}{\sqrt{n(Y/n)(1-Y/n)}}\sim N(0,1).
+    \end{align*}
+    Construct an approximate 95\% confidence interval for $\theta$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    We use the approximate pivotal quantities $Q_n$. A confidence interval is given by
+    \begin{align*}
+        [-1.96\le Q_n\le 1.96]
+    \end{align*}
+    from which some algebraic manipulations will yield 
+    \begin{align*}
+        \frac{Y}{n}-1.96\sqrt{\frac{Y/n(1-Y/n)}{n}}\le\theta\le\frac{Y}{n}+1.96\sqrt{\frac{Y/n(1-Y/n)}{n}}
+    \end{align*}
+\end{solution}
+\begin{remark}
+    As $n\to\infty$, the confidence intervals tend to shrink in size.
+\end{remark}
+\begin{example}
+    Suppose $X\sim f(x;\theta)$ with 
+    \begin{align*}
+        f(x;\theta)=\frac{2(\theta-x)}{\theta^2},\qquad x\in(0,\theta)
+    \end{align*}
+    \begin{enumerate}
+        \item [(i)] Show that $X/\theta$ is a pivotal quantity.
+
+        We just need to compute the distribution of $X/\theta$. We see that
+        \begin{align*}
+            P[X/\theta\le t]=P[X\le \theta t]=\int_0^{\theta t}f(x;\theta)dx
+        \end{align*}
+        Differentiating with respect to $t$, we see that 
+        \begin{align*}
+            f_{X/\theta}(t)=\theta f(\theta t;\theta)=\frac{2(\theta-\theta t)}{\theta}=2(1-t)
+        \end{align*}
+        which is a distribution independent of $\theta$.
+        \item [(ii)] Find constants $a$ and $b$ such that $P[X/\theta\le a]=\frac{1-p}{2}$ and $P[X/\theta\le b]=1-\frac{1-p}{2}$.
+
+        We need $a$ such that $\int_0^a2(1-t)dt=\frac{1-p}{2}$ and same for $b$. In other words,
+        \begin{align*}
+            2a-a^2=\frac{1-p}{2}\\
+            (a-1)^2=1-\frac{1-p}{2}\\
+            a=1-\sqrt{\frac{1+p}{2}}
+        \end{align*}
+        and
+        \begin{align*}
+            2b-b^2=1-\frac{1-p}{2}\\
+            b=1-\sqrt{\frac{1-p}{2}}.
+        \end{align*}
+        \item [(iii)] Construct a $100p\%$ confidence interval for $\theta$.
+
+        We have $P[a\le X/\theta\le b]=p$. Rearranging yields the confidence interval
+        \begin{align*}
+            \frac{X}{b}\le\theta\le \frac{X}{a}
+        \end{align*}
+        where $a$ and $b$ are defined as in the previous part.
+        \item [(iv)] Given $X=1$, what is a 90\% confidence interval for $\theta$?
+
+        Plugging into the formula, we get
+        \begin{align*}
+            \frac{1}{1-\sqrt{0.05}}\le \theta\le 1+\frac{1}{1-\sqrt{0.95}}
+        \end{align*}
+    \end{enumerate}
+    Note: I may have made computation errors here.
+\end{example}
+\begin{example}
+    Suppose $X_1,\ldots,X_n$ are i.i.d. random variables from $\mathrm{Exp}(\theta)$ where 
+    \begin{align*}
+        f(x;\theta)=\frac{1}{\theta}e^{-x/\theta},\qquad x>0,\,\theta>0.
+    \end{align*}
+    \begin{enumerate}
+        \item [(i)] Use the central limit theorem to find an approximate pivotal quantity.
+
+        Remark that $E[X_i]=\theta$ and $\mathrm{Var}(X_i)=\theta^2$. It follows that for large $n$,
+        \begin{align*}
+            \frac{\sqrt{n}(\bar X-\theta)}{\theta}\sim N(0,1)\quad\text{approximately.}
+        \end{align*}
+        We can further recall the MLE of $\theta$, which is given by
+        \begin{align*}
+            \hat\theta=\frac{1}{n}\sum_{i=1}^nX_i.
+        \end{align*}
+        Note that by the WLLN, this converges in distribution to $\theta$. Thus 
+        \begin{align*}
+            Q_n=\frac{\sqrt{n}(\bar X-\theta)}{\hat\theta}\sim N(0,1)\quad \text{approximately}
+        \end{align*}
+        as $n\to\infty$. This is a pivotal quantity.
+        \item [(ii)] Use this value to construct a 95\% confidence interval for $\theta$.
+
+        We need
+        \begin{align*}
+            -1.96\le Q_n\le 1.96
+        \end{align*}
+        or
+        \begin{align*}
+            -1.96\hat\theta/\sqrt{n}\le \bar X-\theta\le 1.96\hat\theta/\sqrt{n}
+        \end{align*}
+        This yields
+        \begin{align*}
+            \bar X-\frac{1.96\bar X}{\sqrt{n}}\le \theta\le\bar X+\frac{1.96\bar X}{\sqrt{n}}
+        \end{align*}
+        or
+        \begin{align*}
+            (1-\frac{1.96}{\sqrt{n}})\bar X\le\theta\le(1+\frac{1.96}{\sqrt{n}})\bar X.
+        \end{align*}
+    \end{enumerate}
+\end{example}
+\subsection{Chi-squared and $t$-distributions}
+\begin{example}
+    Suppose $Y_1,\ldots,Y_n$ are i.i.d. random variables from $N(\mu,\sigma^2)$.
+    \begin{enumerate}
+        \item [(i)] Construct a 95\% confidence interval for $\sigma^2$.
+
+        Let us first go over a failed attempt.
+
+        We know that $\bar Y\sim N(\mu,\frac{\sigma^2}{n})$ so that
+        \begin{align*}
+            \frac{\sqrt{n}(\bar Y-\mu)}{\sigma}\sim N(0,1).
+        \end{align*}
+        In other words, the function $Q(Y;\mu,\sigma^2)=\frac{\sqrt{n}(\bar Y-\mu)}{\sigma}$ is a pivotal quantity. It follows that we can construct our 95\% confidence interval by taking the interval
+        \begin{align*}
+            -1.96\le \frac{\sqrt{n}(\bar Y-\mu)}{\sigma}\le 1.96
+        \end{align*}
+        or
+        \begin{align*}
+            -\frac{1.96\sigma}{\sqrt{n}}\le(\bar Y-\mu)\le \frac{1.96\sigma}{\sqrt{n}}\\
+            (\bar Y-\mu)^2\le\frac{1.96^2\sigma^2}{n}\\
+            \sigma^2\ge\frac{n(\bar Y-\mu)^2}{1.96^2}
+        \end{align*}
+        which is an appropriate confidence interval when $\mu$ is known.
+
+        Unfortunately, this doesn't actually give us a confidence interval since we don't have an upper bound on $\sigma^2$. This means that we don't get nearly enough information on $\sigma^2$ as we would like. In a sense, the amount of information we gain doesn't increase as we take the confidence level $p\to 1$. We will introduce a definition below.
+    \end{enumerate}
+\end{example}
+\begin{definition}
+    A continuous random variable $X$ has $\chi^2_k$ ($k=1,2,\ldots$) distribution if its pdf has the form
+    \begin{align*}
+        f(x)=\frac{1}{2^{k/2}\Gamma(k/2)}x^{k/2-1}e^{-x/2},\qquad x>0
+    \end{align*}
+\end{definition}
+\begin{lemma}
+    For a $\chi_k^2$ random variable $X$, the following holds:
+    \begin{align*}
+        E[X^j]=2^j\frac{\Gamma(\frac{k}{2}+j)}{\Gamma(\frac{k}{2})}\qquad j=1,2,\ldots
+    \end{align*}
+\end{lemma}
+\begin{proof}
+    Straightforward integral.
+    \begin{align*}
+        E[X^j]&=\int_0^\infty x^j\cdot\frac{1}{2^{k/2}\Gamma(k/2)}x^{k/2-1}e^{-x/2}dx\\
+        &=\int_0^\infty\frac{1}{2^{k/2}\Gamma(k/2)}x^{k/2+j-1}e^{-x/2}dx\\
+        &=\int_0^\infty\frac{1}{2^{k/2+j}\Gamma(k/2+j)}\cdot\frac{2^{k/2+j}\Gamma(k/2+j)}{2^{k/2}\Gamma(k/2)}x^{k/2+j-1}e^{-x/2}dx\\
+        &=\frac{2^{k/2+j}\Gamma(k/2+j)}{2^{k/2}\Gamma(k/2)}\\
+        &=2^j\cdot\frac{\Gamma(\frac{k}{2}+j)}{\Gamma(\frac{k}{2})}
+    \end{align*}
+\end{proof}
+\begin{corollary}
+    For a $\chi_k^2$ random variable $X$, its expectation and variance are given by
+    \begin{align*}
+        E[X]=k\quad\text{and}\quad \mathrm{Var}(X)=2k
+    \end{align*}
+\end{corollary}
+\begin{proof}
+    We see by the previous lemma that 
+    \begin{align*}
+        E[X]=2\cdot\frac{\Gamma(k/2+1)}{\Gamma(k/2)}=2\cdot(k/2)=k
+    \end{align*}
+    and
+    \begin{align*}
+        E[X^2]=4\cdot\frac{\Gamma(k/2+2)}{\Gamma(k/2)}=4\cdot\frac{k}{2}(\frac{k}{2}+1)=k^2+2k
+    \end{align*}
+    from which the variance follows by a direct computation.
+\end{proof}
+\begin{theorem}
+    Let $W_1,\ldots,W_n$ be independent with $W_i\sim \chi^2_{k_i}$. Then 
+    \begin{align*}
+        S=\sum_{i=1}^nW_i\sim\chi_{\sum_{i=1}^nk_i}^2.
+    \end{align*}
+\end{theorem}
+\begin{proof}
+    Note that we can compute the mgf of a $\chi_k^2$ random variable. from the previous lemma. Specifically, we see that
+    \begin{align*}
+        M_X(t)&=\sum_{j=0}^\infty \frac{1}{j!}E[X^j]t^j\\
+        &=\sum_{j=0}^\infty\frac{1}{j!}\cdot\frac{\Gamma(k/2+j)}{\Gamma(k/2)}(2t)^j\\
+        &=\sum_{j=0}^\infty\frac{\frac{k}{2}(\frac{k}{2}+1)\ldots(\frac{k}{2}+j-1)}{j!}(2t)^j
+    \end{align*}
+    which is precisely the negative binomial series for $(1-2t)^{-\frac{k}{2}}$. The result follows directly from multiplicity.
+\end{proof}
+\begin{theorem}
+    If $Z\sim N(0,1)$, then the distribution of $W=Z^2$ is $\chi_1^2$.
+\end{theorem}
+\begin{proof}
+    We compute $P[W\le w]=P[Z^2\le w]=P[|Z|\le \sqrt{w}]$ when $w\ge 0$. This is equal to
+    \begin{align*}
+        P[W\le w]&=F_Z(\sqrt{w})-F_Z(-\sqrt{w})
+    \end{align*}
+    which has derivative
+    \begin{align*}
+        f_W(w)&=f_Z(\sqrt{w})\cdot\frac{1}{2\sqrt{w}}+f_Z(-\sqrt{w})\cdot\frac{1}{2\sqrt{w}}\\
+        &=\frac{f_Z(\sqrt{w})}{\sqrt{w}}\\
+        &=\frac{1}{\sqrt{2\pi w}}\exp(-\frac{w}{2})\\
+        &=\frac{1}{2^{1/2}\Gamma(\frac{1}{2})}w^{-1/2}e^{-\frac{w}{2}}
+    \end{align*}
+    which is precisely the distribution of a $\chi_1^2$ random variable.
+\end{proof}
+\begin{corollary}
+    If $Z_1,\ldots,Z_n$ are i.i.d. $N(0,1)$ random variables and $S=\sum_{i=1}^nZ_i^2\sim \chi^2_{n}$.
+\end{corollary}
+The following theorem allows us to find a pivotal quantity for $\sigma^2$.
+\begin{theorem}
+    Suppose $Y_1,\ldots,Y_n$ are i.i.d. $N(\mu,\sigma^2)$ random variables. Then
+    \begin{align*}
+        \frac{1}{\sigma^2}\sum_{i=1}^n(Y_i-\bar Y)^2\sim \chi_{n-1}^2.
+    \end{align*}
+\end{theorem}
+Let us go back to our example. 
+\setcounter{theorem}{35}
+\begin{example}
+    Suppose $Y_1,\ldots,Y_n$ are i.i.d. random variables from $N(\mu,\sigma^2)$.
+    \begin{enumerate}
+        \item [(i)] Construct a 95\% confidence interval for $\sigma^2$.
+
+        Remark that we know that $\frac{1}{\sigma^2}\sum_{i=1}^n(Y_i-\bar Y)^2$ has distribution $\chi^2_{n-1}$. We can thus find an interval $[a,b]$ such that
+        \begin{align*}
+            P[0\le a\le\frac{1}{\sigma^2}\sum_{i=1}^n(Y_i-\bar Y)^2\le b]=95\%.
+        \end{align*}
+        In other words,
+        \begin{align*}
+            P[\frac{1}{b}\sum_{i=1}^n(Y_i-\bar Y)^2\le \sigma^2\le \frac{1}{a}\sum_{i=1}^n(Y_i-\bar Y)^2]=95\%
+        \end{align*}
+        It follows that we can set $a$ and $b$ such that $F(a)=2.5\%$ and $F(b)=97.5\%$ where $F$ is the cdf of a $\chi_{n-1}^2$ random variable.
+        \item [(ii)] Construct a 95\% confidence interval for $\mu$.
+    
+        When $\sigma^2$ is known, it is easy to see that $\frac{\sqrt{n}(\bar Y-\mu)}{\sigma}$ is a pivotal quantity that is distributed according to a $N(0,\frac{\sigma^2}{n})$ distribution. It becomes fairly easy to compute a confidence interval in this case.
+    
+        What is not so easy is when $\sigma^2$ is unknown. We will require a bit more theory for this.
+    \end{enumerate}
+\end{example}
+\setcounter{theorem}{43}
+\begin{definition}
+    A continuous random variable $T$ has the student's $t$-distribution if its pdf is given by
+    \begin{align*}
+        f(t;k)=c_k\left(1+\frac{t^2}{k}\right)^{-(k+1)/2}\qquad t\in\mathbb R,\,k=1,2,\ldots
+    \end{align*}
+    where
+    \begin{align*}
+        c_k=\frac{\Gamma(\frac{k+1}{2})}{\sqrt{k\pi}\Gamma(\frac{k}{2})}
+    \end{align*}
+    We write $T\sim t_k$ and we call this distribution the $t$-distribution with $k$ degrees of freedom.
+\end{definition}
+\begin{theorem}\label{t-dist-prop}
+    Suppose $Z\sim N(0,1)$ and $U\sim\chi_{k}^2$ are independent. Then 
+    \begin{align*}
+        T=\frac{Z}{\sqrt{U/k}}\sim t_k.
+    \end{align*}
+\end{theorem}
+\begin{proof}
+    This is just a big computation.
+    \begin{align*}
+        P[T\le t]&=P[\frac{Z}{\sqrt{U/k}}\le t]\\
+        &=P[Z\le t\sqrt{U/k}]\\
+        &=\int_{0}^\infty P\left[ Z\le t\sqrt{u/k}\bigm|U=u\right]f_U(u)du\\
+        &=\int_0^\infty \frac{1}{2^{k/2}\Gamma(k/2)}u^{k/2-1}e^{-u/2}F_Z(t\sqrt{u/k})du
+    \end{align*}
+    Set $v=\sqrt{u/k}$ so that $u=kv^2$ and $du=2kvdv$. We get that
+    \begin{align*}
+        \int_0^\infty \frac{1}{2^{k/2}\Gamma(k/2)}u^{k/2-1}e^{-u/2}F_Z(t\sqrt{u/k})du&=\frac{2k^{k/2}}{2^{k/2}\Gamma(k/2)}\int_0^\infty v^{k-1}e^{-kv^2/2}F_Z(tv)dv
+    \end{align*}
+    The result follows after a bit more computation.
+\end{proof}
+Let us return to that example one more time.
+\setcounter{theorem}{35}
+\begin{example}\label{pivotal-quantities}
+    Suppose $Y_1,\ldots,Y_n$ are i.i.d. random variables from $N(\mu,\sigma^2)$.
+    \begin{enumerate}
+        \item [(ii)] Construct a 95\% confidence interval for $\mu$.
+    
+        Let us consider the sample standard deviation of $Y_1,\ldots,Y_n$, which is given by $S=\sqrt{\frac{1}{n-1}\sum_{i=1}^n(Y_i-\bar Y)^2}$. We consider the quantity
+        \begin{align*}
+            \frac{\sqrt{n}(\bar Y-\mu)}{S}&=\frac{\sqrt{n}(\bar Y-\mu)}{\sqrt{\frac{1}{n-1}\sum_{i=1}^n(Y_i-\bar Y)^2}}\\
+            &=\frac{\sqrt{n}(\bar Y-\mu)}{\sigma}\cdot\left(\sqrt{\frac{1}{n-1}\cdot\frac{1}{\sigma^2}\sum_{i=1}^n(Y_i-\bar Y)^2}\right)^{-1}
+        \end{align*}
+        This is of the form given in \ref{t-dist-prop}, with the exception that we have not yet proved that the two random variables are not necessarily independent. 
+        
+        There is a theorem that the sample variance and sample mean are independent, which means that the quantity above is in fact a pivotal quantity that has a $t$-distribution with $n-1$ degrees of freedom. It follows that we can simply find $a$ and $b$ such that
+        \begin{align*}
+            P[a\le \frac{\sqrt{n}(\bar Y-\mu)}{S}\le b]=95\%
+        \end{align*}
+        or equivalently,
+        \begin{align*}
+            P[\frac{bS}{\sqrt{n}}+\bar Y\le \mu\le\frac{aS}{\sqrt{n}}+\bar Y]=95\%.
+        \end{align*}
+    \end{enumerate}
+\end{example}
+\newpage
+\section{Hypothesis testing}
+We would like to measure the credibility of statements such as "This drug developed by some company reduces pain better than currently available drugs". We do this via hypothesis testing.
+
+We begin by specifying a "default" hypothesis and then check whether the data collected does not agree with this hypothesis. We refer to the default hypothesis as the null hypothesis ($H_0$) and the case where the null hypothesis does not hold is called the alternate hypothesis.
+\subsection{Binomial testing}
+\begin{example}
+    Suppose we toss a coin 100 times and record the outcome each time. We would like to prove or disprove that this is a fair coin. We count $Y$, the number of heads which has a binomial distribution with $n=100$. We call the probability that we get heads on a given flip $\theta$. If this is a fair coin, we would assume $\theta=0.5$ and otherwise, we would expect $\theta\ne0.5$.
+    \begin{enumerate}
+        \item [(i)] What is the null hypothesis in this case?
+
+        $H_0:\theta=0.5$
+        \item [(ii)] What observed values of $Y$ would be highly inconsistent with this hypothesis?
+
+        Numbers far from $50$. Depends how tolerant you are.
+
+        Of course, we would like a more specific answer to this question. We give some definitions below:
+    \end{enumerate}
+\end{example}
+\begin{definition}
+    A test statistic $D$ is a function of the data $Y$ that is constructed to measure the degree of "disagreement" between $Y$ and $H_0$.
+\end{definition}
+\begin{remark}
+    We usually define $D$ such that $D=0$ represents the best possible agreement between $Y$ and $H_0$. Values of $D$ not close to 0 indicate disagreement.
+\end{remark}
+\begin{example}
+    In the previous example, if $D=|Y-50|$, then $d=|y-50|$ is the observed value of $D$ given $Y=y$.
+    \begin{enumerate}
+        \item [(i)] What is $P[D\ge d]$ when $H_0$ is true?
+
+        We can compute that it is
+        \begin{align*}
+            \sum_{\substack{x=0\\|x-50|\ge d}}^{100}\binom{100}{x}0.5^{100}
+        \end{align*}
+        Note that we can approximate this via a $\mathrm{POI}(50)$ or a $N(50,25)$ distribution.
+        \item [(ii)] If for example we observe $y=52$, then we see that $d=2$ and we can compute that $P[D\ge 2]\approx0.76$. This means that we should expect to have a value with $|y-50|\ge 2$ around 76\% of the time. This does not prove that the coin is fair, but we don't have sufficient evidence to reject the claim.
+    \end{enumerate}
+\end{example}
+\begin{definition}
+    Suppose we use a test statistic $D(Y)$ to test the null hypothesis $H_0$. Suppose $d=D(y)$ is observed. The $p$-value or observed significance level of the test of null hypothesis $H_0$ using test statistic $D(Y)$ is
+    \begin{align*}
+        p\mathrm{-value}=P[D(Y)\ge d\mid H_0].
+    \end{align*}
+\end{definition}
+\begin{remark}
+    If $d$ is large and consequently the $p$-value is small then we have evidence in the data to support rejecting $H_0$.
+\end{remark}
+\begin{remark}
+    Here are some guidelines to interpreting $p$-values.
+    \begin{enumerate}
+        \item [(i)] When the $p$-value is at least 10\%, there is no evidence against $H_0$.
+        \item [(ii)] When the $p$-value is between 5\% and 10\%, there is weak evidence for rejecting $H_0$.
+        \item [(iii)] When the $p$-value is between 1\% and 5\%, there is evidence for rejecting $H_0$.
+        \item [(iv)] When the $p$-value is between 0.1\% and 1\%, there is strong evidence for rejecting $H_0$.
+        \item [(v)] When the $p$-value is less than 0.1\%, there is very strong evidence for rejecting $H_0$.
+    \end{enumerate}
+\end{remark}
+\begin{example}
+    Say we test the null hypothesis $\theta=0.5$ vs $H_1\ne0.5$ for large $n=200$ with $y=90$ and $D(Y)=|Y-100|$. Do we reject $H_0$ at the 0.05 significance level?
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    We can compute the $p$-value. We will approximate the distribution of our $\mathrm{Bin}(200,\theta)$ by a normal distribution $N(100,200\cdot 0.5\cdot 0.5)=N(100,50)$ and we see that $d=10$ is approximately 1.41 standard deviations away from 100. We can thus compute that $P(D\ge 10)\approx0.15>0.05$, so we do not have sufficient evidence to reject $H_0$.
+\end{solution}
+\begin{example}
+    Say we test the hypothesis $H_0:\theta=0.5$ and $H_1:\theta>0.5$ for large $n=200$ with $y=130$ and $D(Y)=\max\{(Y-100),0\}$. Do we reject $H_0$ at the 0.01 significance level?
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    We must compute the $p$-value, which is 
+    \begin{align*}
+        P[Y\ge 130\mid H_0]
+    \end{align*}
+    Note that $Y$ is $\frac{30}{\sqrt{50}}\approx4.24$ standard deviations away from the mean. We can thus compute the tail probability of an $N(0,1)$ distribution, which gives a probability that is more than small enough to reject.
+\end{solution}
+\subsection{Normal testing}
+\begin{example}
+    Suppose $X_1,\ldots,X_n$ is a random sample drawn from $N(\mu,\sigma^2)$ where one of the parameters is known. Find statistics for each of the following and compute $p$-values.
+    \begin{enumerate}
+        \item [(i)] $H_0:\mu=\mu_0$ vs. $H_1:\mu\ne \mu_0$
+
+        Recall that we had a pivotal quantity for $\mu$ in \ref{pivotal-quantities} given by
+        \begin{align*}
+            \frac{\sqrt{n}(\bar X-\mu)}{S}.
+        \end{align*}
+        Specifically, this quantity follows a $t$-distribution with $n-1$ degrees of freedom. It follows that we can use the absolute value of this quantity, 
+        \begin{align*}
+            D=\frac{\sqrt{n}|\bar X-\mu_0|}{S}
+        \end{align*}
+        as a statistic. We can thus calculate the probability
+        \begin{align*}
+            P[D\ge d\mid H_0]=P[T\le -d]+P[T\ge d]
+        \end{align*}
+        where $T\sim t_{n-1}$.
+        \item [(ii)] $H_0:\mu=\mu_0$ vs. $H_1:\mu>\mu_0$
+
+        We use the statistic 
+        \begin{align*}
+            D=\frac{\sqrt{n}\max\{\bar X-\mu_0,0\}}{S}
+        \end{align*}
+        so by a similar process as (i), we see that
+        \begin{align*}
+            P[D\ge d\mid H_0]=P[T\ge d].
+        \end{align*}
+        \item [(iii)] $H_0:\sigma^2=\sigma^2_0$ vs. $H_1:\sigma^2\ne \sigma_0^2$
+
+        Recall that $\frac{(n-1)S^2}{\sigma^2}=\frac{1}{\sigma^2}\sum_{i=1}^n(Y_i-\bar Y)^2\sim \chi_{n-1}^2$ is a pivotal quantity for $\sigma^2$. We can thus compute the distance from the mean,
+        \begin{align*}
+            D=\left|\frac{(n-1)S^2}{\sigma_0^2}-(n-1)\right|
+        \end{align*}
+        so that 
+        \begin{align*}
+            P[D\ge d\mid H_0]=P[C\le (n-1)-d]+P[C\ge (n-1)+d].
+        \end{align*}
+        where $C\sim \chi_{n-1}^2$.
+        
+        Note that this is not actually quite right. For example, if we had $d\ge n-1$, we would be accounting for the entire left half of the distribution (from $0$ to $n-1$). We thus need to perform some rescaling on the statistic to make this work. However, we can make a good approximation for the $p$-value as follows:
+
+        If our observed value $u$ for $U=\frac{(n-1)S^2}{\sigma_0^2}$ is below $n-1$, then compute $2P[C\le u]$. If it is above, then compute $2P[C\ge u]$. 
+        \item [(iv)] $H_0:\sigma^2=\sigma_0^2$ vs. $H_1:\sigma^2>\sigma_0^2$
+
+        Similar to the previous example, but we only need to compute the $p$-value to be $P[C\ge u]$ when we observe $u\ge n-1$.
+    \end{enumerate}
+\end{example}
+\subsection{Type I and Type II errors}
+\begin{definition}
+    At significance level $\alpha$, the rejection region is 
+    \begin{align*}
+        R=\{x:D(x)\text{ would lead us to reject }\alpha\}
+    \end{align*}
+\end{definition}
+\begin{definition}
+    A type I error is an outcome where we reject $H_0$ given $H_0$ is true. We also call this a false positive.
+
+    The type I error probability is the probability of a type I error occuring and is given by
+    \begin{align*}
+        \alpha=P[\text{Reject } H_0\mid H_0].
+    \end{align*}
+\end{definition}
+\begin{definition}
+    A type II error is an outcome where we do not reject $H_0$ given $H_0$ is false. We also call this a false negative.
+
+    The type II error probability is the probability of a type II error occurring and is given by
+    \begin{align*}
+        \beta=P[\text{Do not reject }H_0\mid H_1]
+    \end{align*}
+\end{definition}
+\begin{definition}
+    The power of a test is the probability of rejecting $H_0$ given $H_1$. We can calculate this by 
+    \begin{align*}
+        P[\text{Reject }H_0\mid H_1]=1-\beta.
+    \end{align*}
+\end{definition}
+\begin{remark}
+    We would prefer our test to be more powerful.
+\end{remark}
+\subsection{Likelihood ratio tests}
+\begin{lemma}[Neyman-Pearson]
+    Let $(\Omega,\mathcal F)$ be a measurable space and let $\mathbb Q$ and $\mathbb P$ be probability measures on $\Omega$ such that $\mathbb Q\ll\mathbb P$. Let $d\mathbb Q=Ld\mathbb P$ be the Radon-Nikodym derivative of $\mathbb Q$ with respect to $\mathbb P$. Then for a fixed $\alpha>0$, if $c>0$ is such that the event $A=\{\omega\in \Omega:L(\omega)>c\}$ satisfies $P(A)=\alpha$ and for any event $B$ with $P(B)\le\alpha$, we have that $\mathbb Q(B)\le\mathbb Q(A)$.
+\end{lemma}
+\begin{proof}
+    Consider a set $B$ with $P(B)\le\alpha$. Also consider the sets $B^+=\{\omega\in B:L(\omega)>c\}$ and $B^-=\{\omega\in B:L(\omega)\le c\}$. Then
+    \begin{align*}
+        \mathbb Q(B)=\int_{B^+}Ld\mathbb P+\int_{B^-}Ld\mathbb P\le\int_{A\cap B^+} Ld\mathbb P+c\mathbb P(B^-)\le \int_{A\cap B^+}Ld\mathbb P+\int_{A\setminus B^+}Ld\mathbb P=\mathbb Q(A)
+    \end{align*}
+    where equality holds if and only if $\mathbb P(B^-)=0$ and $\mathbb P(B)=\alpha$ (in other words, $\mathbb P(A\setminus B)=0$).
+\end{proof}
+\begin{lemma}[Neyman-Pearson]
+    Suppose $X_1,\ldots,X_n$ is a random sample from a distribution $f(x;\theta)$. Consider testing $H_0:\theta=\theta_0$ vs. $H_1:\theta=\theta_1$. For some constant $c$, suppose the rejection region defined by 
+    \begin{align*}
+        R=\left\{x:\frac{L(\theta_1;x)}{L(\theta_0;x)}>c\right\}
+    \end{align*}
+    corresponds to a test with type I error probability $\alpha$. Then this test is the most powerful test among all tests with type I error probability $\alpha$.
+\end{lemma}
+\begin{proof}
+    Omitted.
+\end{proof}
+\begin{example}
+    Suppose $(X_1,\ldots,X_n)$ is a random sample drawn from $N(\theta,1)$. At a type 1 error probability of 0.05, find a Most Powerful test for $H_0:\theta=0$ vs. $H_1:\theta=\theta_1$ for some $\theta_1>0$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+
+    We need a test that gives a rejection region of $R=\{x:\frac{L(\theta_1;x)}{L(0;x)}>c\}$ such that $P[R|H_0]=0.05$. Note that 
+    \begin{align*}
+        L(0;X)&=\frac{1}{(\sqrt{2\pi})^n}\exp(-\sum_{i=1}^n\frac{X_i^2}{2})\\
+        L(\theta_1;X)&=\frac{1}{(\sqrt{2\pi})^n}\exp(-\sum_{i=1}^n\frac{(X_i-\theta_1)^2}{2})\\
+        \frac{L(\theta_1;X)}{L(0;X)}&=\exp(\frac{1}{2}\sum_{i=1}^n(X_i^2-(X_i-\theta_1)^2))
+    \end{align*}
+    so $x\in R$ if
+    \begin{align*}
+        \frac{1}{2}\sum_{i=1}^n(2\theta_1x_i-\theta_1^2)&>\log c\\
+        n\bar x&>\frac{1}{2\theta_1}(2\log c+n\theta_1^2)\\
+        \sqrt n\bar x&>\frac{1}{2\sqrt n\theta_1}(2\log c+n\theta_1^2)
+    \end{align*}
+    So we need to solve for $c$ where $k=\frac{1}{2\sqrt n\theta_1}(2\log c+n\theta_1^2)$ is the specific value that makes $P(X_1>k)=0.05$. This is standard computation.
+\end{solution}
+\begin{example}
+    Suppose $(X_1,\ldots,X_n)$ drawn from $f(x;\theta)=\frac{\theta}{x^{\theta+1}},\, x\ge 1,\,\theta>0$. At a type I error probability of 0.05, find a most powerful test for $H_0:\theta=1$ vs $H_1:\theta=\theta_1$ for some $\theta_1>1$. Note that $\log(X_i)\sim\mathrm{Exp}(\frac{1}{\theta})$.
+\end{example}
+\begin{solution}
+    We compute the likelihood function:
+    \begin{align*}
+        L(\theta;x)=\prod_{i=1}^n\frac{\theta}{x_i^{\theta+1}}=\frac{\theta^n}{\left(\prod_{i=1}^nx_i\right)^{\theta+1}}
+    \end{align*}
+    Hence
+    \begin{align*}
+        \frac{L(\theta_1;x)}{L(1;x)}=\frac{\theta_1^n}{(\prod_{i=1}^nx_i)^{\theta_1-1}}=\theta_1^n(\prod_{i=1}^nx_i)^{1-\theta_1}
+    \end{align*}
+    and the rejection region outlined in the Neyman-Pearson lemma gives $x\in R$ if and only if
+    \begin{align*}
+        \theta_1^n(\prod_{i=1}^nx_i)^{1-\theta_1}&>c\\
+        (1-\theta_1)\sum_{i=1}^n\log x_i&>\log c-n\log \theta_1\\
+        \sum_{i=1}^n\log x_i&<\frac{1}{1-\theta_1}(\log c-n\log\theta_1)=k
+    \end{align*}
+    and $\sum_{i=1}^n\log x_i\mid H_0\sim\mathrm{Gamma}(n,1)$. We hence need to choose $c$ such that $k$ satisfies $P(G\le k)=0.05$, where $G\sim\mathrm{Gamma}(n,1)$. This is standard computation.
+\end{solution}
+\begin{remark}
+    In general, we would like to test $H_0:\theta\in\Omega_0$ vs. $H_1:\theta\in\Omega\setminus \Omega_0$ where $\Omega$ is the parameter space and $\Omega_0$ is an arbitrary subset of $\Omega$. We can do something similar to the Neyman-Pearson test by defining our rejection region to be
+    \begin{align*}
+        R=\left\{x:\lambda(x)=\frac{\max_{\theta\in\Omega} L(\theta;x)}{\max_{\theta\in\Omega_0} L(\theta;x)}>c\right\}
+    \end{align*}
+    where the constant $c$ is defined by the type I error probability. We call this the Likelihood Ratio Test (LRT).
+
+    Remark here that we don't actually have a solid condition to work with $P[R\mid H_0]$ in the case that $\Omega_0$ has more than 1 parameter. Sometimes, the expression on $c$ might also be impossible to give a closed form. In these cases, we can use Wilks' theorem, which states that
+    \begin{align*}
+        2\log \lambda(X)\mid H_0\to\chi^2(k)\quad\text{in distribution}
+    \end{align*}
+    where $k$ is the difference in free parameters in $\Omega$ and $\Omega_0$.
+\end{remark}
+\begin{example}
+    Suppose $(X_1,\ldots,X_n)$ is a random sample drawn from $N(\mu,\sigma^2)$ with $\sigma^2$ known. Consider testing $H_0:\mu=\mu_0$ vs. $H_A:\mu\ne\mu_0$. Find the LRT with a type I error probability of $\alpha$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    We compute $\lambda(x)$:
+    \begin{align*}
+        \lambda(x)&=\frac{\max_\mu L(\mu;x,\sigma^2)}{L(\mu_0;x,\sigma^2)}\\
+        &=\max_\mu\exp(\frac{1}{2\sigma^2}(\sum_{i=1}^n((x_i-\mu_0)^2-(x_i-\mu)^2))\\
+        &=\max_\mu\exp(\frac{1}{2\sigma^2}(\sum_{i=1}^n(2x_i(\mu-\mu_0)-(\mu^2-\mu_0^2)))\\
+    \end{align*}
+    But note that the value of $\mu$ that maximizes $L(\mu;x,\sigma^2)$ is just the MLE, which is just $\bar x$. Hence
+    \begin{align*}
+        \lambda(x)=\exp(\frac{1}{2\sigma^2}\sum_{i=1}^n2(x_i(\bar x-\mu_0)-(\bar x^2-\mu_0^2))).
+    \end{align*}
+    Let us find an equivalent expression for $\lambda(x)>c$.
+    \begin{align*}
+        \exp(\frac{1}{2\sigma^2}\sum_{i=1}^n(2x_i(\bar x-\mu_0)-(\bar x^2-\mu_0^2)))&>c\\
+        \sum_{i=1}^n(2x_i(\bar x-\mu_0)-(\bar x^2-\mu_0^2))&>2\sigma^2\log c\\
+        2n\bar x(\bar x-\mu_0)-n(\bar x^2-\mu_0^2)&>2\sigma^2\log c\\
+        2\bar x^2-2\mu_0\bar x-\bar x^2+\mu_0^2&>\frac{2\sigma^2}{n}\log c\\
+        (\bar x-\mu_0)^2&>\frac{2\sigma^2}{n}\log c\\
+        \frac{n}{\sigma^2}(\bar x-\mu_0)^2&>2\log c=k
+    \end{align*}
+    and $\frac{n}{\sigma^2}(\bar X-\mu_0)^2\sim\chi^2(1)$. Hence we just need to find $k$ such that when $Y\sim\chi^2(1)$, $P[Y> k]=\alpha$ and solve for $c$.
+\end{solution}
+\begin{problem}
+    Suppose we have two independent random samples $X_1,\ldots,X_n\sim \mathrm{Poi}(\theta_1)$ and $Y_1,\ldots,Y_m\sim\mathrm{Poi}(\theta_2)$. Find the LRT with a type I probability of $\alpha$ for $H_0:\theta_1=\theta_2$ and $H_A:\theta_1\ne\theta_2$.
+\end{problem}
+\begin{solution}
+    First we compute the likelihood functions. Recall that 
+    \begin{align*}
+        L(\theta_1,\theta_2;x,y)=\prod_{i=1}^n\frac{e^{-\theta_1}\theta_1^{x_i}}{x_i!}\prod_{j=1}^m\frac{e^{-\theta_2}\theta_2^{y_j}}{y_j!}
+    \end{align*}
+    If we assume $H_0$, then the denominator of $\lambda$ will use the MLE of $\theta_{12}$, where it is fairly straightforward to derive that this is just the mean of the $X$'s and $Y$'s, 
+    \begin{align*}
+        \hat\theta_{12}=\frac{1}{m+n}(\sum_{i=1}^nX_i+\sum_{j=1}^mY_j)=\frac{n\bar x+m\bar y}{n+m}.
+    \end{align*}
+    Now $L(\theta_1,\theta_2;x,y)$ is maximized when $\theta_1=\hat\theta_1=\bar x$ and $\theta_2=\hat\theta_2=\bar y$. We can hence compute
+    \begin{align*}
+        \lambda(x,y)&=\prod_{i=1}^n\frac{e^{-\bar x}\bar x^{x_i}}{x_i!}\prod_{j=1}^m\frac{e^{-\bar y}\bar y^{y_j}}{y_j!}\left(\prod_{i=1}^n\frac{e^{-\hat\theta_{12}}\hat\theta_{12}^{x_i}}{x_i!}\prod_{j=1}^m\frac{e^{-\hat\theta_{12}}\hat\theta_{12}^{y_j}}{y_j!}\right)^{-1}\\
+        &=\prod_{i=1}^n\left(\frac{\bar x}{\hat\theta_{12}}\right)^{x_i}\prod_{j=1}^m\left(\frac{\bar y}{\hat\theta_{12}}\right)^{y_j}
+    \end{align*}
+    Now it feels pretty impossible to find a distribution for this so we can instead use the LRT approximation. Remark that there are 2 free variables in $\Omega$ and 1 free variable in $\Omega_0$ so $2\log\lambda(x,y)\sim \chi^2(1)$ approximately and
+    \begin{align*}
+        \log \lambda(x,y)=\sum_{i=1}^n x_i\log(\bar x/\hat\theta_{12})+\sum_{j=1}^my_j\log(\bar y/\hat\theta_{12}).
+    \end{align*}
+    Furthermore, we want to get a region where
+    \begin{align*}
+        \lambda(x,y)&>c\\
+        2\log\lambda(x,y)&>2\log c
+    \end{align*}
+    has probability $\alpha$ of happening. Hence we should pick $k$ so that for $G\sim\chi^2(1)$, $P[G\ge k]=\alpha$. Setting $k=2\log c$ gives a pretty good approximation. Then we get $c=e^{k/2}$.
+\end{solution}
+\begin{example}
+    Suppose $X_1,\ldots,X_n$ is a random sample drawn from $N(\mu,\sigma^2)$ where $\sigma^2$ unknown. Consider testing $H_0:\mu=\mu_0$ and $H_A:\mu\ne\mu_0$. Find the LRT with type I error probability of $\alpha$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    First we compute the likelihood functions. Remark that
+    \begin{align*}
+        \max_{\sigma^2}L(\mu_0,\sigma^2;x)=\prod_{i=1}^n\frac{1}{\sqrt{2\pi\hat{\sigma}_0^2}}\exp(-\frac{1}{2\hat{\sigma}_0^2}(x_i-\mu_0)^2)
+    \end{align*}
+    and
+    \begin{align*}
+        \max_{\mu,\sigma^2} L(\mu,\sigma^2;x)=L(\bar x;x)=\prod_{i=1}^n\frac{1}{\sqrt{2\pi\hat\sigma^2_1}}\exp(-\frac{1}{2\hat\sigma^2_1}(x_i-\bar x)^2)
+    \end{align*}
+    where $\hat\sigma^2_0=\frac{1}{n}\sum_{i=1}^n(x_i-\mu_0)^2$ is the MLE for a normal distribution when $\mu=\mu_0$ is known and $\hat\sigma^2_1=\frac{1}{n}\sum_{i=1}^n(x_i-\bar x)^2$ is the MLE for a normal distribution when $\mu$ is unknown. Computing $\lambda(x)$, we get
+    \begin{align*}
+        \lambda(x)&=\prod_{i=1}^n\sqrt{\frac{2\pi\hat\sigma_0^2}{2\pi\hat\sigma_1^2}}\exp(-\frac{1}{2\hat\sigma_1^2}(x_i-\bar x)^2+\frac{1}{2\hat\sigma_0^2}(x_i-\mu_0)^2)\\
+        &=\left(\frac{\hat\sigma_0^2}{\hat\sigma_1^2}\right)^\frac{n}{2}\exp\left(-\frac{\sum_{i=1}^n(x_i-\bar x)^2}{\frac{2}{n}\sum_{i=1}^n(x_i-\bar x)^2}+ \frac{\sum_{i=1}^n(x_i-\mu_0)^2}{\frac{2}{n}\sum_{i=1}^n(x_i-\mu_0)^2} \right)\\
+        &=\left(\frac{\hat\sigma_0^2}{\hat\sigma_1^2}\right)^\frac{n}{2}.
+    \end{align*}
+    Note now that $\hat\sigma_0^2=\frac{1}{n}\sum_{i=1}^n((x_i-\bar x)^2+(\bar x-\mu_0)^2)=\hat\sigma_1^2+(\bar x-\mu_0)^2$. Hence we see that $\lambda(x)=(1+\frac{(\bar x-\mu_0)^2}{\hat\sigma_1^2})^\frac{n}{2}$ and we get our rejection region
+    \begin{align*}
+        \lambda(x)&>c\\
+        \frac{(\bar x-\mu_0)^2}{\hat\sigma_1^2}&>c^{\frac{2}{n}}-1\\
+        \frac{|\bar x-\mu_0|}{\sqrt{\frac{1}{n}\sum_{i=1}^n(x_i-\bar x)^2}}&>\sqrt{c^\frac{2}{n}-1}\\
+        \frac{\frac{1}{\sigma}|\bar x-\mu_0|}{\sqrt{\frac{1}{n-1}\sum_{i=1}^n(\frac{1}{\sigma}x_i-\frac{1}{\sigma}\bar x)^2}}&>\sqrt{c^{\frac{2}{n}}-1}\cdot\sqrt{\frac{n-1}{n}}
+    \end{align*}
+    We see that the left hand side is a $t(n-1)$ distribution and we are testing when $|t(n-1)|>\sqrt{c^{\frac{2}{n}}-1}$. This gives a rejection region.
+\end{solution}
+\begin{example}
+    Suppose we have two independent random samples $X_1,\ldots,X_n$ are i.i.d. $N(\mu_1,\sigma^2)$; $Y_1,\ldots,Y_m$ are i.i.d. $N(\mu_2,\sigma^2)$ with $\sigma^2$ unknown. Consider testing $H_0:\mu_1=\mu_2$ vs. $H_A:\mu_1\ne\mu_2$. 
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    First let $\sigma_0^2$ be the MLE of $\sigma^2$ with the constraint that $\mu_1=\mu_2$, in other words, let $\mu_0=\frac{1}{n+m}(\sum_{i=1}^nx_i+\sum_{j=1}^my_j)$ and $\sigma_0^2=\frac{1}{m+n}(\sum_{i=1}^n(x_i-\mu_0)+\sum_{j=1}^m(y_i-\mu_0))$. We compute the MLE of $\sigma^2$ without the constraint that $\mu_1=\mu_2$.
+
+    Note that 
+    \begin{align*}
+        L(\mu_1,\mu_2,\sigma^2;x,y)&=\prod_{i=1}^n\frac{1}{\sqrt{2\pi\sigma^2}}\exp(-\frac{1}{2\sigma^2}(x_i-\mu_1)^2)\prod_{j=1}^m\frac{1}{\sqrt{2\pi\sigma^2}}\exp(-\frac{1}{2\sigma^2}(y_j-\mu_2)^2)\\
+        \ell(\mu_1,\mu_2,\sigma^2;x,y)&=-\frac{n+m}{2}\log(2\pi\sigma^2)-\frac{1}{2\sigma^2}\sum_{i=1}^n(x_i-\mu_1)^2-\frac{1}{2\sigma^2}\sum_{j=1}^m(y_j-\mu_2)^2\\
+        \frac{\partial\ell}{\partial\sigma^2}&=-\frac{n+m}{2\sigma^2}+\frac{1}{2\sigma^4}(\sum_{i=1}^n(x_i-\mu_1)^2+\sum_{j=1}^m(y_j-\mu_2)^2)\\
+        \frac{\partial\ell}{\partial\mu_1}&=-\frac{1}{2\sigma^2}\sum_{i=1}^n2(\mu_1-x_i)\\
+        \frac{\partial\ell}{\partial\mu_2}&=-\frac{1}{2\sigma^2}\sum_{j=1}^m(\mu_2-y_j)
+    \end{align*}
+    Hence it follows that our MLE for this case is $\hat\mu_1=\bar x$, $\hat\mu_2=\bar y$, and $\hat\sigma^2=\frac{1}{n+m}(\sum_{i=1}^n(x_i-\bar x)^2+\sum_{j=1}^m(y_j-\bar y)^2)$. We can now compute $\lambda(x,y)$.
+    \begin{align*}
+        \lambda(x,y)&=\frac{L(\hat\mu_1,\hat\mu_2,\hat\sigma^2;x,y)}{L(\mu_0,\mu_0,\sigma^2_0;x,y)}\\
+        &=\prod_{i=1}^n\exp(-\frac{(x_i-\bar x)^2}{2\hat\sigma^2}+\frac{(x_i-\mu_0)^2}{2\sigma_0^2})\prod_{j=1}^m\exp(-\frac{(y_j-\bar y)^2}{2\hat\sigma^2}+\frac{(y_j-\mu_0)^2}{2\sigma_0^2})\cdot\left(\frac{\sigma_0^2}{\hat\sigma^2}\right)^\frac{n+m}{2}
+    \end{align*}
+    Hence we get
+    \begin{align*}
+        \log\lambda(x,y)&=\frac{1}{2\sigma_0^2}\sum_{i=1}^n(x_i-\mu_0)^2-\frac{1}{2\hat\sigma^2}\sum_{i=1}^n(x_i-\bar x)^2\\
+        &+\frac{1}{2\sigma^2_0}\sum_{j=1}^m(y_j-\mu_0)^2-\frac{1}{2\hat\sigma^2}\sum_{j=1}^m(y_j-\bar y)^2\\
+        &+\frac{n+m}{2}\log(\frac{\sigma_0^2}{\hat\sigma^2})\\
+        &=\frac{\sum_{i}(x_i-\mu_0)^2+\sum_{j}(y_j-\mu_0)^2}{\frac{2}{m+n}(\sum_{i}(x_i-\mu_0)^2+\sum_{j}(y_j-\mu_0)^2)}\\
+        &-\frac{\sum_{i}(x_i-\bar x)^2+\sum_{j}(y_j-\bar y)^2}{\frac{2}{m+n}(\sum_{i}(x_i-\bar x)^2+\sum_{j}(y_j-\bar y)^2)}\\
+        &+\frac{n+m}{2}\log(\frac{\sigma_0^2}{\hat\sigma^2})\\
+        &=\frac{n+m}{2}\log(\frac{\sigma_0^2}{\hat\sigma^2}).
+    \end{align*}
+    It follows that $\lambda(x,y)=\left(\frac{\sigma_0^2}{\hat\sigma^2}\right)^\frac{n}{2}$ and our rejection region is
+    \begin{align*}
+        \lambda(x,y)=\left(\frac{\sigma_0^2}{\hat\sigma^2}\right)^\frac{n+m}{2}>c.
+    \end{align*}
+    Remark now that
+    \begin{align*}
+        \sigma_0^2&=\frac{1}{m+n}\left(\sum_{i=1}^n(x_i-\mu_0)^2+\sum_{j=1}^m(y_j-\mu_0)^2\right)\\
+        &=\frac{1}{m+n}\left(\sum_{i=1}^n(x_i-\bar x)^2+\sum_{j=1}^m(y_j-\bar y)^2+n(\bar x-\mu_0)^2+m(\bar y-\mu_0)^2\right)\\
+        &=\hat\sigma^2+\frac{n(\bar x-\mu_0)^2+m(\bar y-\mu_0)^2}{m+n}
+    \end{align*}
+    
+    Furthermore, we have that $n(\bar x-\mu_0)$
+    As such, we see that we have rejection region
+    \begin{align*}
+        \frac{\sigma_0^2}{\hat\sigma^2}&>c^\frac{2}{n+m}\\
+        \frac{n(\bar x-\mu_0)^2+m(\bar y-\mu_0)^2}{(m+n)\hat\sigma^2}&>c^\frac{2}{n+m}-1\\
+        \sqrt{\frac{n(\bar x-\mu_0)^2+m(\bar y-\mu_0)^2}{\sum_{i}(x_i-\bar x)^2+\sum_{j}(y_j-\bar y)^2}}&>\sqrt{c^\frac{2}{n+m}-1}\\
+        \sqrt{\frac{n(\bar x-\mu_0)^2+m(\bar y-\mu_0)^2}{}}
+    \end{align*}
+\end{solution}
+\subsection{Multinomial likelihood testing}
+\begin{example}
+    Suppose $(Y_1,Y_2,Y_3)\sim\mathrm{Mult}(n,\theta_1,\theta_2,\theta_3)$ where $\theta+\theta_2+\theta_3=1$. Find the approximate LRT for testing $H_0:\theta_1=\theta_2=\theta_3$ vs. $H_1:\text{not }H_0$, with type I error probability of 0.05.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Remark that $H_0$ is equivalent to $\theta_1=\theta_2=\theta_3=\frac{1}{3}$. The likelihood function given $H_0$ is
+    \begin{align*}
+        L(n,\frac{1}{3},\frac{1}{3},\frac{1}{3};y)=\frac{n!}{y_1!y_2!y_3!}\cdot\frac{1}{3^n}.
+    \end{align*}
+    Meanwhile, 
+    \begin{align*}
+        \max_{\theta_1,\theta_2,\theta_3}L(n,\theta_1,\theta_2,\theta_3;y)=\frac{n!}{y_1!y_2!y_3!}\left(\frac{y_1}{n}\right)^{y_1}\left(\frac{y_2}{n}\right)^{y_2}\left(\frac{y_3}{n}\right)^{y_3}
+    \end{align*}
+    Hence the likelihood ratio is
+    \begin{align*}
+        \lambda(y)=3^n\left(\frac{y_1}{n}\right)^{y_1}\left(\frac{y_2}{n}\right)^{y_2}\left(\frac{y_3}{n}\right)^{y_3}.
+    \end{align*}
+    Remark here that we have 2 free variables for $H_1$ and no free variables for $H_0$. Hence $2\log\lambda(x)\sim\chi^2(2)$ approximately and we can simply find $k$ so that $P[G\ge k]=0.05$ when $G\sim\chi^2(2)$. 
+\end{solution}
+\begin{remark}
+    Suppose we are testing a multinomial model with parameters $\theta_j$, $j=1,\ldots,k$ such that $0<\theta_j<1$, $\sum_j\theta_j=1$ and 
+    \begin{align*}
+        (Y_1,\ldots,Y_k)\sim f(y_1,\ldots,y_k;\theta_1,\ldots,\theta_k)=\frac{n!}{y_1!\cdots y_k!}\theta_1^{y_1}\cdots\theta_k^{y_k}.
+    \end{align*}
+    We wish to test the hypothesis that the parameters $\theta_1,\ldots,\theta_k$ are related in some way, for example, that they are all functions of a parameter $\alpha$ such that
+    \begin{align*}
+        H_0:\theta_j=\theta_j(\alpha),\quad j=1,\ldots,k
+    \end{align*}
+    where $\alpha=(\alpha_1,\ldots,\alpha_p)$ and $p<k-1$. In other words, $p$ is the number of free parameters in $H_0$. Then an approximate LRT is 
+    \begin{align*}
+        2\log\lambda(Y)\sim \chi^2(k-1-p)
+    \end{align*}
+    where 
+    \begin{align*}
+        \lambda(y)=\frac{\prod_{j=1}^k\left(\frac{y_j}{n}\right)^{y_j}}{\max_\alpha L(\theta_1(\alpha),\ldots,\theta_k(\alpha);\,y_1,\ldots,y_k)}=\frac{\prod_{j=1}^k\left(\frac{y_j}{n}\right)^{y_j}}{\prod_{j=1}^k\theta_j(\tilde\alpha)^{y_j}}
+    \end{align*}
+    where $\tilde \alpha$ is the MLE of $\theta_1(\alpha),\ldots,\theta_k(\alpha)$. We see that
+    \begin{align*}
+        2\log\lambda(Y)=\sum_{j=1}^ky_j\log(\frac{y_j}{n})-\sum_{j=1}^ky_j\log(\theta_j(\tilde\alpha))=\sum_{j=1}^ky_j\log(\frac{y_j}{n\theta_j(\tilde\alpha)}).
+    \end{align*}
+\end{remark}
+\begin{example}
+    Suppose $(Y_1,Y_2,Y_3)\sim\mathrm{Mult}(n,\theta_1,\theta_2,\theta_3)$. Consider an approximate LRT for
+    \begin{align*}
+        H_0:\theta_1=\alpha^2,\,\theta_2=2\alpha(1-\alpha),\,\theta_3=(1-\alpha)^2,\quad\alpha\in(0,1).
+    \end{align*}
+    Compute the $p$-value for $n=100$, $y_1=17$, $y_2=46$, $y_3=37$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    We set our statistic to be
+    \begin{align*}
+        P[\chi^2(1)>2\log\lambda(x)].
+    \end{align*}
+    Note that $2\log\lambda(x)$ is indeed $\chi^2(1)$. Now we compute $\lambda$. To do this, we need to find the MLE of $\alpha$.
+
+    Compute: 
+    \begin{align*}
+        L(\alpha;y)&=\frac{n!}{y_1!y_2!y_3!}\alpha^{2y_1}(2\alpha(1-\alpha))^{y_2}(1-\alpha)^{2y_3}\\
+        \ell(\alpha;y)&=\log(\frac{n!}{y_1!y_2!y_3!})+2y_1\log\alpha+y_2\log(2\alpha(1-\alpha))+2y_3\log(1-\alpha)\\
+        \frac{\partial\ell}{\partial\alpha}(\alpha;y)&=\frac{2y_1}{\alpha}+\frac{y_2}{\alpha}-\frac{y_2}{1-\alpha}-\frac{2y_3}{1-\alpha}
+    \end{align*}
+    In other words, we require
+    \begin{align*}
+        (2y_1+y_2)(1-\alpha)&=(y_2+2y_3)\alpha\\
+        2y_1+y_2&=2\alpha n\\
+        \alpha&=\frac{2y_1+y_2}{2n}
+    \end{align*}
+    Hence in our case, $\alpha=\frac{2\cdot17+46}{200}=\frac{2}{5}$. The rest is straightforward computation. We should get a $p$-value of approximately 0.7.
+\end{solution}
+\begin{example}
+    The number of service interruptions over 200 separate days is summarized in the following frequency table:
+    \begin{center}
+        \begin{tabular}{c|c|c|c|c|c|c|c}
+            Number of interruptions & 0 & 1 & 2 & 3 & 4 & 5 & $>5$ \\
+            \hline
+            Observed frequency $y_j$ & 64 & 71 & 42 & 18 & 4 & 1 & 0\\
+        \end{tabular}
+    \end{center}
+    Let $Y_j$ be the number of times $j$ interruptions are observed. The joint model for $Y_j$ follows a multinomial distribution. We wish to test whether a Poisson model for $Y$, the number of interruptions on a single day, is consistent with this data. The null hypothesis is:
+    \begin{align*}
+        H_0:p_j=\frac{\lambda_je^{-\lambda}}{j!},\quad j=0,1,2,\ldots
+    \end{align*}
+    where we use $\lambda$ as the parameter in the Poisson model. Hence we can calculate the $p$-value for $H_0$.
+
+    To compute $\hat\lambda$, we simply take the MLE for a Poisson distribution. We have effectively observed 200 Poisson trials and hence our MLE for $\lambda_j$ is just the mean value of our observations, which is exactly 1.15. We can also compute $p_j$ for $0\le j\le 5$, which comes out to
+    \begin{center}
+        \begin{tabular}{c|c|c|c|c|c|c}
+            $p_0$ & $p_1$ & $p_2$ & $p_3$ & $p_4$ & $p_5$ & $p_{>5}$ \\
+            0.316 & 0.363 & 0.209 & 0.080 & 0.023 & 0.0053 & 0.0037
+        \end{tabular}\footnote{I got ChatGPT to compute these, I can't vouch for the accuracy here}
+    \end{center}
+    We can hence do a likelihood ratio test here. We end up with a test statistic of around $2\log\lambda(x)\approx 1.9$ and our $p$-value is $P[\chi^2(5)\ge 1.9]$.
+\end{example}
+\begin{remark}
+    Often we want to assess whether two factors appear to be related. One way to test this is to test the hypothesis that the two factors are independent and thus statistically unrelated. Specifically, suppose that individuals/items can be classified according to two factors $A$ and $B$, of which there are categories $A_1,\ldots,A_a$ for which $A$ can be classified into, and $B_1,\ldots,B_b$ for which $B$ can be classified into, where $a\ge 2$ and $b\ge 2$. If a random sample of $n$ individuals is selected, let $y_{ij}$ be the number of individuals in category $A_i$ and $B_j$.
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+             & $B_1$ & $B_2$ & $\cdots$ & $B_b$ & Total \\
+             \hline
+             $A_1$ & $y_{11}$ & $y_{12}$ & $\cdots$ & $y_{1b}$ & $r_1$\\
+             \hline
+             $A_2$ & $y_{21}$ & $y_{22}$ & $\cdots$ & $y_{2b}$ & $r_2$\\
+             \hline
+             $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$\\
+             \hline
+             $A_a$ & $y_{a1}$ & $y_{a2}$ & $\cdots$ & $y_{ab}$ & $r_a$\\
+             \hline
+             Total & $c_1$ & $c_2$ & $\cdots$ & $c_b$ & $n$\\
+             \hline
+        \end{tabular}
+    \end{center}
+    Let $\theta_{ij}$ be the probability that a randomly selected individual belongs to $A_i$ and $B_j$. We wish to test the hypothesis that these probabilities are independent. In other words, that there are probabilities $\alpha_1,\ldots,\alpha_a$ and $\beta_1,\ldots,\beta_b$ such that $\theta_{ij}=\alpha_i\beta_j$ for all $i,j$.
+
+    This is an example of a multinomial test with $(ab-1)-(a-1)-(b-1)=(a-1)(b-1)$ degrees of freedom. Hence we can compute our likelihood ratio as
+    \begin{align*}
+        \lambda(y)=\frac{\prod_{i,j}\left(\frac{y_{ij}}{n}\right)^{y_{ij}}}{\prod_i\prod_j(\hat\alpha_i\hat\beta_j)^{y_{ij}}}
+    \end{align*}
+    where $\hat\alpha_i$ and $\hat\beta_j$ are the MLE's for $\alpha_i$ and $\beta_j$. Hence our test statistic is
+    \begin{align*}
+        2\log\lambda(y)=\sum_{i,j}y_{ij}\log(\frac{y_{ij}}{n\hat\alpha_i\hat\beta_j})
+    \end{align*}
+    Further note that $\hat\alpha_i=\frac{r_i}{n}$ and $\hat\beta_j=\frac{c_j}{n}$ since under the null hypothesis, $A_i$ and $B_j$ are independent. Hence we have our test statistic as
+    \begin{align*}
+        2\log(\lambda(y))=\sum_{i,j}y_{ij}\log(\frac{ny_{ij}}{r_ic_j})
+    \end{align*}
+    and our $p$-value is
+    \begin{align*}
+        P[\chi^2((a-1)(b-1))>2\log(\lambda(y))].
+    \end{align*}
+\end{remark}
+\begin{example}\label{blood}
+    Human blood is classified according to two systems:
+    \begin{enumerate}
+        \item [(i)] The OAB system (blood type: O, A, B, AB)
+        \item [(ii)] The Rh system (Rh+ or Rh-)
+    \end{enumerate}
+    To determine whether these classifications are statistically independent, a random sample of 300 persons was classified according to both systems. The following data was obtained:
+    \begin{center}
+        \begin{tabular}{c|c|c|c|c|c}
+             & O & A & B & AB & Total \\
+             \hline
+            Rh+ & 82 & 89 & 54 & 19 & 244\\
+            \hline
+            Rh- & 13 & 27 & 7 & 9 & 56\\
+            \hline
+            Total & 95 & 116 & 61 & 28 & 300
+        \end{tabular}
+    \end{center}
+    Test the hypothesis $H_0:\text{OAB is independent from Rh}$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    We plug and chug. Using ChatGPT gives a statistic of $2\log\lambda(y)\approx 8.34$. The number of degrees of freedom is $(2-1)(4-1)=3$ so our $p$-value is
+    \begin{align*}
+        P[\chi^2(3)\ge 8.34]\approx 0.04
+    \end{align*}
+    Hence if our significance level is 0.05, we would reject this hypothesis.
+\end{solution}
+\begin{remark}
+    We can consider a similar problem where individuals can be one of $B$ types $B_1,\ldots,B_b$ but the individuals can be divided into $a$ groups $A_1,\ldots,A_a$. We may want to test if the proportion of individuals of types $B_1,\ldots,B_b$ are the same for each of the groups.
+
+    We want to know the probability $\theta_{ij}$ is $B$-type $B_j$ is the same for all $i=1,\ldots,a$. Notice that $\sum_{j=1}^b\theta_{ij}=1$ for each $i=1,\ldots,a$ and the hypothesis we are interested in testing is
+    \begin{align*}
+        \theta_{1j}=\theta_{2j}=\ldots=\theta_{aj}\quad\text{for all }1\le j \le b.
+    \end{align*}
+    We can also write this as
+    \begin{align*}
+        H_0:\boldsymbol{\theta}_1=\boldsymbol{\theta}_2=\ldots=\boldsymbol{\theta}_a=(\theta_{i1},\theta_{i2},\ldots,\theta_{ib}).
+    \end{align*}
+    We can compute the LRT -- note that here $\theta_{ij}$ represents $P[B_j\mid A_i]$ compared to $P[A_i\cap B_j]$ in independence testing. In the alternate hypothesis, each row has $b-1$ degrees of freedom and there are $a$ rows so we have $a(b-1)$ degrees of freedom. In the null hypothesis, one row determines the entire array of probabilities so we have $b-1$ degrees of freedom. Hence our LRT will correspond to $a(b-1)-(b-1)=(a-1)(b-1)$ degrees of freedom, which coincidentally happens to be the same as with independence testing. Note that the MLE for $\theta_{ij}$ is $\hat\theta_{ij}=\frac{y_{ij}}{r_i}$ for the alternate hypothesis and for the null hypothesis, we assume that the groups are being sampled independently (more so as a technical detail so we can actually compute the likelihood) and we wish to maximize
+    \begin{align*}
+        L(\theta_{i1},\theta_{i2},\ldots,\theta_{ib};y)&=\prod_i\frac{r_i!}{y_{i1}!\cdots y_{ib}!}\theta_{i1}^{y_{i1}}\cdots\theta_{ib}^{y_{ib}}\\
+        \ell(\theta_{i1},\theta_{i2},\ldots,\theta_{ib};y)&=\sum_i\left(\mathrm{const} + \sum_jy_{ij}\log\theta_{ij}\right)
+    \end{align*}
+    Remark that we are also subject to $\sum_{j}\theta_{ij}=1$. Using Lagrange multipliers yields us an MLE of $\hat\theta_{ij}=\frac{y_{\cdot j}}{n}$ where $y_{\cdot j}=\sum_iy_{ij}$. Then computing the LRT, we get
+    \begin{align*}
+        2\log\lambda(Y)=2\sum_{i,j}Y_{ij}\log(\frac{Y_{ij}}{E_{ij}})\sim\chi^2((a-1)(b-1))
+    \end{align*}
+    where $E_{ij}=\frac{r_iY_{\cdot j}}{n}$.
+\end{remark}
+\begin{example}
+    Three hospitals A, B, and C perform a number of risky surgical operations, and their success and failure rates are recorded. Is there a statistically significant difference among the three hospitals?
+    \begin{center}
+        \begin{tabular}{c|c|c|c}
+             & A & B & C \\
+            \#success & 23 & 43 & 85\\
+            \#failures & 2 & 7 & 15
+        \end{tabular}
+    \end{center}
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Note we have 2 degrees of freedom here. We can just plug all the numbers into $2\log\lambda(y)$ and obtain a statistic of $0.86$ and a $p$-value of around $0.65$. This is nowhere near sufficient evidence to reject the null hypothesis.
+\end{solution}
+\begin{example}
+    In example \ref{blood}, we could have instead picked a group of Rh+ blood type participants and Rh- blood type participants. Then this will lead to the same setup as in example \ref{blood} and we will obtain the same conclusions.
+\end{example}
+\begin{example}
+    In a randomized clinical trial, researchers assessed the effectiveness of a daily low dose of aspirin in preventing strokes among high-risk individuals. Patients were randomly assigned to one of two groups:
+    \begin{enumerate}
+        \item [(i)] Aspirin group (received aspirin daily)
+        \item [(ii)] Placebo group (received a placebo pill)
+    \end{enumerate}
+    Each patient was monitored for three years, and it was recorded whether they had a stroke or not.
+
+    We observe the following data:
+    \begin{center}
+        \begin{tabular}{c|c|c|c}
+             & Stroke & No stroke & Total \\
+             \hline
+            Aspirin & 64 (75.6) & 176 (164.4) & 240\\
+            \hline
+            Placebo & 86 (74.4) & 150 (161.6) & 236\\
+            \hline
+            Total & 150 & 326 & 476
+        \end{tabular}\\
+        Observed and expected frequencies for stroke outcomes
+    \end{center}
+    Define $\pi_{11}=P(\text{stroke}\mid\text{aspirin})$ and $\pi_{21}=P(\text{stroke}\mid\text{placebo})$. We wish to test the null hypothesis 
+    \begin{align*}
+        H_0:\pi_{11}=\pi_{21}.
+    \end{align*}
+    In other words, is the probability of having a stroke when given aspirin the same as the probability of having a stroke when given a placebo?
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    We do a homogeneity test with $Y_{ij}$ as listed in the table and $E_{ij}$ also listed in the table. We can simply plug all these numbers in to get the test statistic $2\log\lambda(Y)=5.24$. Also note that we have 1 degree of freedom. Hence we end up with a $p$-value of $P[\chi^2(1)\ge 5.24]\approx0.022$. Hence we should probably reject the null hypothesis.
+\end{solution}
+\newpage
+\section{Bayesian inference}
+So far we have considered a parameter as an unknown constant underlying the distribution of the data. It is only the random sample, and the statistics derived from the sample that are random. 
+
+In Bayesian inference, we assume the parameter $\theta$ has been generated according to some distribution, the prior distribution $\pi$ and the observations then obtained from the corresponding distribution and interpreted as the conditional distribution given the value of $\theta$. The prior distribution $\pi(\theta)$ quantifies information about $\theta$ prior to any real data being gathered.
+\begin{remark}
+    The prior distribution $\pi(\theta)$ can be constructed on the basis of past data or chosen to incorporate information based on the expert's judgement.
+\end{remark}
+\begin{remark}
+    The purpose of the data is to adjust the distribution of $\theta$ in light of the data, to result in the posterior distribution for the parameter. Any plausible conclusions about the plausible value of the data are to be drawn from the posterior distribution.
+\end{remark}
+\begin{definition}
+    Suppose $\theta$ is a random parameter distributed according to a density function $\pi(\theta)$. Let $(X_1,\ldots,X_n)$ be a random sample and assume that $X_i\sim f(x;\theta)$ (or $f(x\mid \theta)$). Then the posterior distribution of the parameter is the conditional probability (density) function of $\theta$ given the data $x=(x_1,\ldots,x_n)$. In other words,
+    \begin{align*}
+        \pi(\theta\mid x)=\frac{\pi(\theta)L(\theta;x)}{\int \pi(\theta)L(\theta;x)d\theta}.
+    \end{align*}
+\end{definition}
+\begin{remark}
+    Remark that this is analagous to Bayes' theorem: that for events $A$ and $B$, $P(A\mid B)=\frac{P(A)P(B\mid A)}{P(B)}$. We have a somewhat continuous analogue. If, for example, the distribution of $\pi(\theta)$ was discrete, we would have a sum in the denominator instead of an integral. 
+\end{remark}
+\begin{remark}
+    It makes sense that the denominator of $\pi(\theta\mid x)$ is that integral --  we want to ensure that $\pi(\theta\mid x)$ is actually a probability density function and hence integrates to 1.
+\end{remark}
+\begin{example}\label{bayesex1}
+    Suppose a coin is tossed $n$ times with probability of heads $\theta$. It is known from previous experience with coins that the probability of heads is not always 1/2, but follows a $\mathrm{Beta}(10,10)$ distribution. If $n$ tosses result in $x$ heads, find the posterior distribution for the probability density function for $\theta$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Recall that the pdf of $\theta$ is $\pi(\theta)=\frac{\theta^9(1-\theta)^9}{B(10,10)}$ where $B$ is the Beta function. A computation shows that
+    \begin{align*}
+        \pi(\theta)L(\theta;x)=\frac{\theta^9(1-\theta)^9}{B(10,10)}\binom{n}{x}\theta^x(1-\theta)^{n-x}=\binom{n}{x}\frac{\theta^{9+x}(1-\theta)^{9+n-x}}{B(10,10)}
+    \end{align*}
+    which is proportional to a $\mathrm{Beta}(10+x,10+n-x)$ distribution. Hence this is the posterior distribution.
+\end{solution}
+\begin{definition}
+    A prior distribution is a conjugate prior if the posterior distribution follows lies in the same family of distributions.
+\end{definition}
+\begin{definition}
+    A prior distribution is flat if it is uniform on $\mathbb R$, in other words, that $\pi(\theta)=c$ for some $c>0$ and $\theta\in\mathbb R$.
+\end{definition}
+\begin{remark}
+    A prior distribution can be improper in the sense that $\int\pi(\theta)d\theta\ne 1$ (or even $\int \pi(\theta)d\theta=\infty$). This does not matter as long as the posterior distribution is a proper distribution. 
+\end{remark}
+\begin{example}\label{bayesex2}
+    Suppose $(X_1,\ldots,X_n)$ is a random sample from $\mathrm{Unif}(0,\theta)$. Show that the prior distribution $\theta\sim\mathrm{Par}(a,b)$ is a conjugate prior.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    The pdf of a Pareto distribution with parameters $a,b$ is $\pi(\theta)=\frac{ab^a}{\theta^{a+1}}$ for $\theta\ge b$. We compute:
+    \begin{align*}
+        \pi(\theta)L(\theta;x)=\frac{ab^a}{\theta^{a+1}}\frac{1}{\theta^n}=\frac{ab^a}{\theta^{a+n+1}},\quad\theta\ge \max_i\{b, x_i\}=\max\{b,x_{(n)}\}.
+    \end{align*}
+    which is proportional to a $\mathrm{Par}(a+n,\max\{b,x_{(n)}\})$ distribution.
+\end{solution}
+\begin{example}\label{bayesex3}
+    Suppose $(X_1,\ldots,X_n)$ is a random sample from $N(\theta,1)$. Show that the prior distribution $\theta\sim N(0,\gamma^2)$ is a conjugate prior.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    First a remark: the actual family we're working with is $N(\mu,\gamma^2)$. We need to make sure that the posterior distribution of $N(0,\gamma^2)$ is a normal distribution not necessarily centred at 0. We compute:
+    \begin{align*}
+        \pi(\theta)L(x;\theta)=\frac{1}{\sqrt{2\pi\gamma^2}}\exp(-\frac{\theta^2}{2\gamma^2})\cdot\prod_{i=1}^n\frac{1}{\sqrt{2\pi}}\exp(-\frac{(x_i-\theta)^2}{2})
+    \end{align*}
+    This is a constant multiple of
+    \begin{align*}
+        \exp\left(-\frac{1}{2}\left(\frac{\theta^2}{\gamma^2}+\sum_{i=1}^n\frac{(x_i-\theta)^2}{2}\right)\right)
+    \end{align*}
+    The interior is quadratic in $\theta$. Hence we may complete the square and multiply out the remaining constant, giving us a normal distribution. Remark that a discriminant calculation ensures that a zero exists.
+\end{solution}
+\begin{example}\label{bayesex4}
+    Suppose that given $\theta$, $X\sim\mathrm{Bin}(n,\theta)$ where the prior distribution is $\theta\sim\mathrm{Unif}(0,1)$. Find the posterior distribution of $\theta$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    This is just a computation.
+    \begin{align*}
+        \pi(\theta)L(\theta;x)=\binom{n}{x}\theta^x(1-\theta)^{n-x}
+    \end{align*}
+    This is proportional to a $\mathrm{Beta}(x+1,n-x+1)$ distribution.
+\end{solution}
+\begin{example}\label{bayesex5}
+    Suppose $(X_1,X_2,\ldots,X_n)$ is a random sample from $N(\theta,1)$. Find the posterior distribution of $\theta$ with a flat prior.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Once again, we compute.
+    \begin{align*}
+        \pi(\theta)L(\theta;x)=c\prod_{i=1}^n\frac{1}{\sqrt{2\pi}}\exp(-\frac{(x_i-\theta)^2}{2})
+    \end{align*}
+    This is a constant multiple of
+    \begin{align*}
+        \exp(-\frac{1}{2}\sum_{i=1}^n(x_i-\theta)^2)&=\exp(-\frac{1}{2}(n\theta^2-2n\bar x\theta+\sum_{i}x_i^2))\\
+        &=\exp(-\frac{n}{2}(\theta^2-2\bar x\theta+\bar x^2+\sum_ix_i^2-\bar x^2))\\
+        &=\exp(-\frac{n}{2}((\theta-\bar x)^2+\mathrm{constant})\\
+        &=\mathrm{constant}\cdot\exp(-\frac{1}{2n^{-1}}(\theta-\bar x)^2)
+    \end{align*}
+    This is proportional to a $N(\bar x,\frac{1}{n})$ distribution.
+\end{solution}
+\begin{definition}
+    The Bayes estimator of $\theta$ is the mean of the posterior distribution $\pi(\theta\mid X)$.
+\end{definition}
+\begin{remark}
+    The Bayes estimator minimizes the Bayes risk for the squared error loss with respect to the prior $\theta$ given $X$, whatever this means
+\end{remark}
+\begin{example}
+    Find the Bayes estimators for the previous examples and compare them to the MLE's of $\theta$.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    Fairly straightforward.
+    \begin{enumerate}
+        \item [\ref{bayesex1}] The Bayes estimator is the mean of a $\mathrm{Beta}(10+x,10+n-x)$ distribution. This is $\frac{10+x}{10+x+10+n-x}=\frac{10+x}{20+n}$. The MLE for $\theta$ is $\frac{x}{n}$. These two get pretty close as $n$ grows large.
+        \item [\ref{bayesex2}] The mean of a $\theta$ is $\frac{(a+n)\max\{b,x_{(n)}}{a+n-1}$. The MLE of $\theta$ is $x_{(n)}$. They do get pretty close as $n$ grows large.
+        \item [\ref{bayesex3}] Exercise (read: I don't want to do this)
+        \item [\ref{bayesex4}] The Bayes estimator is $\frac{x+1}{x+1+n-x+1}=\frac{x+1}{n+2}$. The MLE is $\frac{x}{n}$. Once again pretty close.
+        \item [\ref{bayesex5}] Both the Bayes estimator and the MLE are $\bar x$.
+    \end{enumerate}
+\end{solution}
+\begin{definition}
+    An $\alpha\%$-credible Bayesian interval is an interval $c_1,c_2$ such that 
+    \begin{align*}
+        \int_{c_1}^{c_2}\pi(\theta\mid x)d\theta=\alpha.
+    \end{align*}
+    It is equal-tailed if
+    \begin{align*}
+        \int_{-\infty}^{c_1}\pi(\theta\mid x)d\theta=\int_{c_2}^\infty\pi(\theta\mid x)d\theta.
+    \end{align*}
+\end{definition}
+\begin{example}
+    Find an equal-tailed 95\% Bayesian credible interval for the previous examples.
+\end{example}
+\addtocounter{theorem}{-1}
+\begin{solution}
+    This is just straight up computation/lookup values of known cdfs.
+\end{solution}
+\end{document}
